@@ -2,7 +2,6 @@ package factorielleSMA;
 import jade.core.ProfileImpl;
 import jade.core.Profile;
 import jade.core.Runtime;
-import jade.wrapper.AgentContainer;
 import jade.wrapper.ContainerController;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;

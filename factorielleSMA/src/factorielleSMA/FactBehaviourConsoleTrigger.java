@@ -22,6 +22,7 @@ public class FactBehaviourConsoleTrigger extends Behaviour {
 
 	@Override
 	public void action() {
+		//Reception of the message
 		ACLMessage message = myAgent.receive();
 		int nb = 0;
 		if (message != null)
@@ -29,18 +30,21 @@ public class FactBehaviourConsoleTrigger extends Behaviour {
 			String messageContent = message.getContent();
 			ObjectMapper mapper = new ObjectMapper();
 				try {
+					//Parsing received JSON message
 					JsonNode jrootNode = mapper.readValue(messageContent, JsonNode.class);
 					nb = jrootNode.path("content").path("numbers").path(0).intValue();
 				}
 				catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				
 			if ((nb > 0) && message.getSender().getLocalName() == "console")
 			{
 				ACLMessage message2 = new ACLMessage(ACLMessage.REQUEST);
 
 				ObjectMapper writerMapper = new ObjectMapper();
 				try {
+					//Construction of the message for MultAgent
 					Map<String, Object> numbersMap = new HashMap<String, Object>();
 					List<Object> list = new ArrayList<Object>();
 					list.add(1);
@@ -55,7 +59,8 @@ public class FactBehaviourConsoleTrigger extends Behaviour {
 				catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				message2.addReceiver(new AID("factAgent",AID.ISLOCALNAME));
+				
+				message2.addReceiver(new AID("multAgent",AID.ISLOCALNAME));
 				System.out.println(message2);
 				myAgent.send(message2);
 			}

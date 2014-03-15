@@ -19,7 +19,7 @@ public class MultBehaviour extends CyclicBehaviour {
 		super(a);
 	}
 	
-	private void sendResult(String res) {
+	private void sendResult(int res) {
 		ACLMessage response = new ACLMessage(ACLMessage.INFORM);
 		response.addReceiver( new AID("factAgent", AID.ISLOCALNAME));
 
@@ -45,7 +45,7 @@ public class MultBehaviour extends CyclicBehaviour {
 	}
 
 	public void action() {
-			String result;
+			int result;
 			int op1 = 0;
 			int op2 = 0;
 			ACLMessage order = myAgent.blockingReceive();
@@ -54,7 +54,7 @@ public class MultBehaviour extends CyclicBehaviour {
 					myAgent.getName() + " says : I received this -> \n" + order + "\nContent :\n" + order.getContent()
 				);
 				
-				String[] ops = {};
+				//String[] ops = {};
 				String orderContent = order.getContent();
 				ObjectMapper mapper = new ObjectMapper();
 					try {
@@ -65,7 +65,7 @@ public class MultBehaviour extends CyclicBehaviour {
 					catch (Exception ex) {
 						ex.printStackTrace();
 					}
-				result = Integer.toString(op1 * op2);
+				result = op1 * op2;
 				this.sendResult(result);
 			}
 	}

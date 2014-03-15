@@ -1,4 +1,5 @@
 package factorielleSMA;
+
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +23,12 @@ public class FactBehaviour extends Behaviour {
 	public void action() {
 		int nb = 0;
 		int res = 1;
-
+		
 		ACLMessage request = myAgent.blockingReceive();
 		if ((request != null) && (request.getSender().getLocalName() != "console")) {
-		String messageContent = request.getContent();
-		ObjectMapper mapper = new ObjectMapper();
+			//Parsing received JSON message from MultAgent
+			String messageContent = request.getContent();
+			ObjectMapper mapper = new ObjectMapper();
 			try {
 				JsonNode jrootNode = mapper.readValue(messageContent, JsonNode.class);
 				nb = jrootNode.path("content").path("numbers").path(0).intValue();
@@ -35,15 +37,17 @@ public class FactBehaviour extends Behaviour {
 				ex.printStackTrace();
 			}
 		}
+		
 		int tmp = nb;
 
 		ACLMessage response;
 		while (tmp > 0) {
+			//Sending order for multiplication to MultAgent
 			this.sendOrder(res, tmp);
 			response = myAgent.blockingReceive();
 			if (response != null) {
 				String responseContent = response.getContent();
-				System.out.println("gfh" + response.getContent());
+				//System.out.println("Message received from MultAgent : " + response.getContent());
 				ObjectMapper mapper = new ObjectMapper();
 					try {
 						JsonNode jrootNode = mapper.readValue(responseContent, JsonNode.class);
@@ -60,7 +64,7 @@ public class FactBehaviour extends Behaviour {
 	}
 	
 	private void sendOrder(int nb1, int nb2) {
-		// instantiating the message (request type)
+		// instantiating the message (request type
 		ACLMessage order = new ACLMessage(ACLMessage.REQUEST);
 		order.addReceiver(new AID("multAgent", AID.ISLOCALNAME)); // we can use myAgent.multAgent
 
@@ -76,8 +80,7 @@ public class FactBehaviour extends Behaviour {
 			StringWriter sw = new StringWriter();
 			writerMapper.writeValue(sw, contentMap);
 			order.setContent(sw.toString());
-			System.out.println("sending an order");
-			System.out.println(sw);
+			//System.out.println("FactAgent sends to MultAgent : " + sw);
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
