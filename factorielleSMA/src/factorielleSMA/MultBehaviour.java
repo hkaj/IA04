@@ -19,7 +19,7 @@ public class MultBehaviour extends CyclicBehaviour {
 		super(a);
 	}
 	
-	private void sendResult(int res) {
+	private void sendResult(int res, int op1, int op2) {
 		ACLMessage response = new ACLMessage(ACLMessage.INFORM);
 		response.addReceiver( new AID("factAgent", AID.ISLOCALNAME));
 
@@ -27,15 +27,20 @@ public class MultBehaviour extends CyclicBehaviour {
 		try {
 			Map<String, Object> numbersMap = new HashMap<String, Object>();
 			List<Object> list = new ArrayList<Object>();
-			list.add(res);
+			List<Object> resultList = new ArrayList<Object>();
+			list.add(op1);
+			list.add(op2);
+			resultList.add(res);
 			numbersMap.put("numbers", list);
+			numbersMap.put("result", resultList);
 			Map<String, Object> contentMap = new HashMap<String, Object>();
 			contentMap.put("content", numbersMap);
+			//System.out.println(contentMap.toString());
 			StringWriter sw = new StringWriter();
 			writerMapper.writeValue(sw, contentMap);
 			response.setContent(sw.toString()); 
-			System.out.println("computed this ->");
-			System.out.println(response.getContent());
+			//System.out.println("computed this ->");
+			//System.out.println(response.getContent());
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -50,9 +55,9 @@ public class MultBehaviour extends CyclicBehaviour {
 			int op2 = 0;
 			ACLMessage order = myAgent.blockingReceive();
 			if (order != null) {
-				System.out.println(
+				/*System.out.println(
 					myAgent.getName() + " says : I received this -> \n" + order + "\nContent :\n" + order.getContent()
-				);
+				);*/
 				
 				//String[] ops = {};
 				String orderContent = order.getContent();
@@ -66,7 +71,7 @@ public class MultBehaviour extends CyclicBehaviour {
 						ex.printStackTrace();
 					}
 				result = op1 * op2;
-				this.sendResult(result);
+				this.sendResult(result, op1, op2);
 			}
 	}
 	

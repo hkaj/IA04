@@ -23,7 +23,7 @@ public class FactBehaviourConsoleTrigger extends Behaviour {
 	@Override
 	public void action() {
 		//Reception of the message
-		ACLMessage message = myAgent.receive();
+		ACLMessage message = myAgent.blockingReceive();
 		int nb = 0;
 		if (message != null)
 		{
@@ -38,8 +38,11 @@ public class FactBehaviourConsoleTrigger extends Behaviour {
 					ex.printStackTrace();
 				}
 				
-			if ((nb > 0) && message.getSender().getLocalName() == "console")
+				
+			
+			if (nb > 0)
 			{
+				System.out.println("Calculation of " + nb + " factorial value");
 				ACLMessage message2 = new ACLMessage(ACLMessage.REQUEST);
 
 				ObjectMapper writerMapper = new ObjectMapper();
@@ -61,7 +64,7 @@ public class FactBehaviourConsoleTrigger extends Behaviour {
 				}
 				
 				message2.addReceiver(new AID("multAgent",AID.ISLOCALNAME));
-				System.out.println(message2);
+				//System.out.println(message2);
 				myAgent.send(message2);
 			}
 			else

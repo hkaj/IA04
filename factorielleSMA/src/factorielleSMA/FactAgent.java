@@ -9,8 +9,8 @@ public class FactAgent extends Agent {
 	
 	protected void setup() {
 		System.out.println("Hello, my name is " + this.getLocalName());
-		addBehaviour(new FactBehaviour(this));
 		addBehaviour(new FactBehaviourConsoleTrigger(this));
+		addBehaviour(new FactBehaviour(this));
 	}
 	
 	public AID getMultAgent() {

@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
-public class FactBehaviour extends Behaviour {
+public class FactBehaviour extends CyclicBehaviour {
 	
 	public FactBehaviour(Agent a) {
 		super(a);
@@ -31,14 +31,25 @@ public class FactBehaviour extends Behaviour {
 			ObjectMapper mapper = new ObjectMapper();
 			try {
 				JsonNode jrootNode = mapper.readValue(messageContent, JsonNode.class);
-				nb = jrootNode.path("content").path("numbers").path(0).intValue();
+				System.out.println("Message received from MultAgent : " + jrootNode.toString());
+				nb = jrootNode.path("content").path("numbers").path(1).intValue();
+				res = jrootNode.path("content").path("result").path(0).intValue();
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
 			}
+		
+			if (--nb > 0)
+			{
+				this.sendOrder(res, nb);
+			}
+			else
+			{
+				System.out.println("The result is " + res);
+			}
 		}
 		
-		int tmp = nb;
+		/*int tmp = nb;
 
 		ACLMessage response;
 		while (tmp > 0) {
@@ -47,11 +58,11 @@ public class FactBehaviour extends Behaviour {
 			response = myAgent.blockingReceive();
 			if (response != null) {
 				String responseContent = response.getContent();
-				//System.out.println("Message received from MultAgent : " + response.getContent());
+				System.out.println("Message received from MultAgent : " + response.getContent());
 				ObjectMapper mapper = new ObjectMapper();
 					try {
 						JsonNode jrootNode = mapper.readValue(responseContent, JsonNode.class);
-						res = jrootNode.path("content").path("numbers").path(0).intValue();
+						res = jrootNode.path("content").path("result").path(0).intValue();
 					}
 					catch (Exception ex) {
 						ex.printStackTrace();
@@ -60,7 +71,7 @@ public class FactBehaviour extends Behaviour {
 			}
 		}
 		// printing the result
-		System.out.println(nb + "! = " + res);
+		System.out.println(nb + "! = " + res);*/
 	}
 	
 	private void sendOrder(int nb1, int nb2) {
@@ -87,10 +98,6 @@ public class FactBehaviour extends Behaviour {
 		}
 		// sending the calculus request
 		myAgent.send(order);
-	}
-	
-	public boolean done() {
-		return true;
 	}
 
 }
