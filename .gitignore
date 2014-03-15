@@ -1,2 +1,4 @@
 .metadata/
 *.txt
+*.prefs
+*.class
