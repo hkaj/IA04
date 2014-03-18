@@ -12,7 +12,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+
+import java.lang.Math;
 
 public class FactBehaviour extends CyclicBehaviour {
 	
@@ -30,6 +36,7 @@ public class FactBehaviour extends CyclicBehaviour {
 			String messageContent = request.getContent();
 			ObjectMapper mapper = new ObjectMapper();
 			try {
+				System.out.println("message !!! : " + messageContent);
 				JsonNode jrootNode = mapper.readValue(messageContent, JsonNode.class);
 				System.out.println("Message received from MultAgent : " + jrootNode.toString());
 				nb = jrootNode.path("content").path("numbers").path(1).intValue();
@@ -77,7 +84,7 @@ public class FactBehaviour extends CyclicBehaviour {
 	private void sendOrder(int nb1, int nb2) {
 		// instantiating the message (request type
 		ACLMessage order = new ACLMessage(ACLMessage.REQUEST);
-		order.addReceiver(new AID("multAgent", AID.ISLOCALNAME)); // we can use myAgent.multAgent
+		order.addReceiver(searchReceiver()); // we can use myAgent.multAgent
 
 		ObjectMapper writerMapper = new ObjectMapper();
 		try {
@@ -98,6 +105,27 @@ public class FactBehaviour extends CyclicBehaviour {
 		}
 		// sending the calculus request
 		myAgent.send(order);
+	}
+	
+	private AID searchReceiver(){
+		AID aid = new AID();
+		DFAgentDescription template = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("Operations");
+		sd.setName("Multiplication");
+		template.addServices(sd);
+		try {
+			DFAgentDescription[] result = DFService.search(this.myAgent, template);
+			if (result.length > 0){
+				int indice = ((int)Math.random() * result.length);
+				aid = result[indice].getName();
+			}
+		}catch (FIPAException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return aid;
 	}
 
 }

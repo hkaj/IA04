@@ -12,6 +12,10 @@ import java.util.List;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 public class FactBehaviourConsoleTrigger extends Behaviour {
@@ -63,7 +67,7 @@ public class FactBehaviourConsoleTrigger extends Behaviour {
 					ex.printStackTrace();
 				}
 				
-				message2.addReceiver(new AID("multAgent",AID.ISLOCALNAME));
+				message2.addReceiver(searchReceiver());
 				//System.out.println(message2);
 				myAgent.send(message2);
 			}
@@ -73,6 +77,30 @@ public class FactBehaviourConsoleTrigger extends Behaviour {
 		else
 			block();
 
+	}
+	
+	
+	private AID searchReceiver(){
+		AID aid = new AID();
+		DFAgentDescription template = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("Operations");
+		sd.setName("Multiplication");
+		template.addServices(sd);
+//		System.out.println(template);
+		try {
+			DFAgentDescription[] result = DFService.search(this.myAgent, template);
+//			System.out.println("number of mult agents: " + result.length);
+			if (result.length > 0){
+				int indice = ((int)Math.random() * result.length);
+				aid = result[indice].getName();
+			}
+		}catch (FIPAException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return aid;
 	}
 
 	@Override

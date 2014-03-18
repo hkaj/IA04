@@ -13,15 +13,18 @@ import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.lang.Thread;
+
 public class MultBehaviour extends CyclicBehaviour {
 	
 	public MultBehaviour(Agent a) {
 		super(a);
 	}
 	
-	private void sendResult(int res, int op1, int op2) {
+	private void sendResult(int res, int op1, int op2, AID receiver) {
 		ACLMessage response = new ACLMessage(ACLMessage.INFORM);
-		response.addReceiver( new AID("factAgent", AID.ISLOCALNAME));
+//		System.out.println("Receiver !!! : "  + receiver);
+		response.addReceiver(receiver);
 
 		ObjectMapper writerMapper = new ObjectMapper();
 		try {
@@ -53,12 +56,17 @@ public class MultBehaviour extends CyclicBehaviour {
 			int result;
 			int op1 = 0;
 			int op2 = 0;
+			AID requestSender = new AID(); 
+			
 			ACLMessage order = myAgent.blockingReceive();
+			
 			if (order != null) {
 				/*System.out.println(
 					myAgent.getName() + " says : I received this -> \n" + order + "\nContent :\n" + order.getContent()
 				);*/
 				
+				requestSender = order.getSender();
+				System.out.println(requestSender);
 				//String[] ops = {};
 				String orderContent = order.getContent();
 				ObjectMapper mapper = new ObjectMapper();
@@ -71,7 +79,17 @@ public class MultBehaviour extends CyclicBehaviour {
 						ex.printStackTrace();
 					}
 				result = op1 * op2;
-				this.sendResult(result, op1, op2);
+				
+				//On s'endort avant d'envoyer la réponse
+				try {
+					int wait_time = 500 + (int)(Math.random() * (10000 - 500 + 1)); 
+					System.out.println("let's wait " + wait_time + "ms.");
+					Thread.sleep(wait_time);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				this.sendResult(result, op1, op2, requestSender);
 			}
 	}
 	
