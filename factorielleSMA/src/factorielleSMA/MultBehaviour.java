@@ -1,4 +1,5 @@
 package factorielleSMA;
+
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,15 +11,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jade.core.Agent;
 import jade.core.AID;
-import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.lang.Thread;
 
-public class MultBehaviour extends CyclicBehaviour {
+public class MultBehaviour extends OneShotBehaviour {
 	
-	public MultBehaviour(Agent a) {
+	public MultBehaviour(Agent a, ACLMessage order) {
 		super(a);
+		m_order = order;
 	}
 	
 	private void sendResult(int res, int op1, int op2, AID receiver) {
@@ -46,47 +48,50 @@ public class MultBehaviour extends CyclicBehaviour {
 			ex.printStackTrace();
 		}
 		myAgent.send(response);
+		System.out.println("Message sent from : " + myAgent.getName() + " to : " + receiver.getName());
 	}
 
+	
 	public void action() {
 			int result;
 			int op1 = 0;
 			int op2 = 0;
 			AID requestSender = new AID(); 
 			
-			ACLMessage order = myAgent.blockingReceive();
+			System.out.println("My name is " + myAgent.getName() + " and I've been asked to make a multiplication !");
 			
-			if (order != null) {
-				System.out.println("My name is " + myAgent.getName() + " and I've been asked to make a multiplication !");
-				
-				//Parsing des arguments de la multiplication
-				String orderContent = order.getContent();
-				ObjectMapper mapper = new ObjectMapper();
-				try {
-					JsonNode jrootNode = mapper.readValue(orderContent, JsonNode.class);
-					op1 = jrootNode.path("content").path("numbers").path(0).intValue();
-					op2 = jrootNode.path("content").path("numbers").path(1).intValue();
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-				}
-					
-				//Exécution de la requête
-				result = op1 * op2;
-				
-				//On s'endort avant d'envoyer la r�ponse
-				try {
-					int wait_time = 500 + (int)(Math.random() * (10000 - 500 + 1)); 
-					System.out.println("let's wait " + wait_time + "ms.");
-					Thread.sleep(wait_time);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				//Envoi de la réponse
-				requestSender = order.getSender();
-				this.sendResult(result, op1, op2, requestSender);
+			//Parsing des arguments de la multiplication
+			String orderContent = m_order.getContent();
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				JsonNode jrootNode = mapper.readValue(orderContent, JsonNode.class);
+				op1 = jrootNode.path("content").path("numbers").path(0).intValue();
+				op2 = jrootNode.path("content").path("numbers").path(1).intValue();
 			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+			}
+				
+			//Exécution de la requête
+			result = op1 * op2;
+			
+			//On s'endort avant d'envoyer la r�ponse
+			try {
+				int wait_time = 500 + (int)(Math.random() * (10000 - 500 + 1)); 
+				System.out.println("let's wait " + wait_time + "ms.");
+				Thread.sleep(wait_time);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			//Envoi de la réponse
+			requestSender = m_order.getSender();
+			this.sendResult(result, op1, op2, requestSender);
 	}
+	
+	
+	//Members
+	
+	private ACLMessage m_order;
 	
 }

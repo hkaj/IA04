@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -20,40 +20,38 @@ import jade.lang.acl.ACLMessage;
 
 import java.lang.Math;
 
-public class FactBehaviour extends CyclicBehaviour {
+public class FactBehaviour extends OneShotBehaviour {
 	
-	public FactBehaviour(Agent a) {
+	public FactBehaviour(Agent a, ACLMessage order) {
 		super(a);
+		m_order = order;
 	}
 
 	public void action() {
 		int nb = 0;
 		int res = 1;
 		
-		ACLMessage request = myAgent.blockingReceive();
-		if ((request != null) && (request.getSender().getLocalName() != "console")) {
-			//Parsing received JSON message from MultAgent
-			String messageContent = request.getContent();
-			ObjectMapper mapper = new ObjectMapper();
-			try {
-				System.out.println("message !!! : " + messageContent);
-				JsonNode jrootNode = mapper.readValue(messageContent, JsonNode.class);
-				System.out.println("Message received from MultAgent : " + jrootNode.toString());
-				nb = jrootNode.path("content").path("numbers").path(1).intValue();
-				res = jrootNode.path("content").path("result").path(0).intValue();
-			}
-			catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		
-			if (--nb > 0)
-			{
-				this.sendOrder(res, nb);
-			}
-			else
-			{
-				System.out.println("The result is " + res);
-			}
+		//Parsing received JSON message from MultAgent
+		String messageContent = m_order.getContent();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.out.println("message !!! : " + messageContent);
+			JsonNode jrootNode = mapper.readValue(messageContent, JsonNode.class);
+			System.out.println("Message received from MultAgent : " + jrootNode.toString());
+			nb = jrootNode.path("content").path("numbers").path(1).intValue();
+			res = jrootNode.path("content").path("result").path(0).intValue();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	
+		if (--nb > 0)
+		{
+			this.sendOrder(res, nb);
+		}
+		else
+		{
+			System.out.println("The result is " + res);
 		}
 	}
 	
@@ -108,5 +106,9 @@ public class FactBehaviour extends CyclicBehaviour {
 		
 		return aid;
 	}
+	
+	//Members
+	
+	private ACLMessage m_order;
 
 }

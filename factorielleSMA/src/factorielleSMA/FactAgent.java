@@ -1,6 +1,5 @@
 package factorielleSMA;
-import factorielleSMA.FactBehaviour;
-import jade.core.AID;
+
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -9,12 +8,9 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 public class FactAgent extends Agent {
 	
-	private AID multAgent = new AID("multAgent", AID.ISLOCALNAME);
-	
 	protected void setup() {
 		System.out.println("Hello, my name is " + this.getLocalName());
-		addBehaviour(new FactBehaviourConsoleTrigger(this));
-		addBehaviour(new FactBehaviour(this));
+		addBehaviour(new FactReceiveMessageBehaviour(this));
 		
 		//Registering to the AMS list
 		DFAgentDescription dfd = new DFAgentDescription();
@@ -29,8 +25,5 @@ public class FactAgent extends Agent {
 			e.printStackTrace();
 		}
 	}
-	
-	public AID getMultAgent() {
-		return this.multAgent;
-	}
+
 }
