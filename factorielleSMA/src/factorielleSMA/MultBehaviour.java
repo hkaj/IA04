@@ -23,7 +23,6 @@ public class MultBehaviour extends CyclicBehaviour {
 	
 	private void sendResult(int res, int op1, int op2, AID receiver) {
 		ACLMessage response = new ACLMessage(ACLMessage.INFORM);
-//		System.out.println("Receiver !!! : "  + receiver);
 		response.addReceiver(receiver);
 
 		ObjectMapper writerMapper = new ObjectMapper();
@@ -38,17 +37,14 @@ public class MultBehaviour extends CyclicBehaviour {
 			numbersMap.put("result", resultList);
 			Map<String, Object> contentMap = new HashMap<String, Object>();
 			contentMap.put("content", numbersMap);
-			//System.out.println(contentMap.toString());
 			StringWriter sw = new StringWriter();
 			writerMapper.writeValue(sw, contentMap);
 			response.setContent(sw.toString()); 
-			//System.out.println("computed this ->");
-			//System.out.println(response.getContent());
+
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
-//		response.setContent(res);
 		myAgent.send(response);
 	}
 
@@ -61,26 +57,24 @@ public class MultBehaviour extends CyclicBehaviour {
 			ACLMessage order = myAgent.blockingReceive();
 			
 			if (order != null) {
-				/*System.out.println(
-					myAgent.getName() + " says : I received this -> \n" + order + "\nContent :\n" + order.getContent()
-				);*/
+				System.out.println("My name is " + myAgent.getName() + " and I've been asked to make a multiplication !");
 				
-				requestSender = order.getSender();
-				System.out.println(requestSender);
-				//String[] ops = {};
+				//Parsing des arguments de la multiplication
 				String orderContent = order.getContent();
 				ObjectMapper mapper = new ObjectMapper();
-					try {
-						JsonNode jrootNode = mapper.readValue(orderContent, JsonNode.class);
-						op1 = jrootNode.path("content").path("numbers").path(0).intValue();
-						op2 = jrootNode.path("content").path("numbers").path(1).intValue();
-					}
-					catch (Exception ex) {
-						ex.printStackTrace();
-					}
+				try {
+					JsonNode jrootNode = mapper.readValue(orderContent, JsonNode.class);
+					op1 = jrootNode.path("content").path("numbers").path(0).intValue();
+					op2 = jrootNode.path("content").path("numbers").path(1).intValue();
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+				}
+					
+				//Exécution de la requête
 				result = op1 * op2;
 				
-				//On s'endort avant d'envoyer la r�ponse
+				//On s'endort avant d'envoyer la r�ponse
 				try {
 					int wait_time = 500 + (int)(Math.random() * (10000 - 500 + 1)); 
 					System.out.println("let's wait " + wait_time + "ms.");
@@ -89,6 +83,8 @@ public class MultBehaviour extends CyclicBehaviour {
 					e.printStackTrace();
 				}
 				
+				//Envoi de la réponse
+				requestSender = order.getSender();
 				this.sendResult(result, op1, op2, requestSender);
 			}
 	}

@@ -15,8 +15,14 @@ public class MultMain {
 		try{
 			Profile pMult = new ProfileImpl(MAIN_PROPERTIES_FILE);
 			ContainerController multContainer = rt.createMainContainer(pMult);
-			AgentController multAgent = multContainer.createNewAgent("multAgent", MultAgent.class.getName(), new Object[0]);
+			
+			//Création de trois agents multiplicateurs
+			AgentController multAgent = multContainer.createNewAgent("multAgent1", MultAgent.class.getName(), new Object[0]);
+			AgentController multAgent2 = multContainer.createNewAgent("multAgent2", MultAgent.class.getName(), new Object[0]);
+			AgentController multAgent3 = multContainer.createNewAgent("multAgent3", MultAgent.class.getName(), new Object[0]);
 			multAgent.start();
+			multAgent2.start();
+			multAgent3.start();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();

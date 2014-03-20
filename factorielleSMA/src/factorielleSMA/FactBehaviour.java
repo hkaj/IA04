@@ -55,31 +55,8 @@ public class FactBehaviour extends CyclicBehaviour {
 				System.out.println("The result is " + res);
 			}
 		}
-		
-		/*int tmp = nb;
-
-		ACLMessage response;
-		while (tmp > 0) {
-			//Sending order for multiplication to MultAgent
-			this.sendOrder(res, tmp);
-			response = myAgent.blockingReceive();
-			if (response != null) {
-				String responseContent = response.getContent();
-				System.out.println("Message received from MultAgent : " + response.getContent());
-				ObjectMapper mapper = new ObjectMapper();
-					try {
-						JsonNode jrootNode = mapper.readValue(responseContent, JsonNode.class);
-						res = jrootNode.path("content").path("result").path(0).intValue();
-					}
-					catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				tmp -= 1;
-			}
-		}
-		// printing the result
-		System.out.println(nb + "! = " + res);*/
 	}
+	
 	
 	private void sendOrder(int nb1, int nb2) {
 		// instantiating the message (request type
@@ -107,17 +84,21 @@ public class FactBehaviour extends CyclicBehaviour {
 		myAgent.send(order);
 	}
 	
+	
 	private AID searchReceiver(){
 		AID aid = new AID();
 		DFAgentDescription template = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
+		
 		sd.setType("Operations");
 		sd.setName("Multiplication");
 		template.addServices(sd);
+		
+		//Choix aléatoire de l'agent multiplicateur
 		try {
 			DFAgentDescription[] result = DFService.search(this.myAgent, template);
 			if (result.length > 0){
-				int indice = ((int)Math.random() * result.length);
+				int indice = (int)(Math.random() * result.length);
 				aid = result[indice].getName();
 			}
 		}catch (FIPAException e)
