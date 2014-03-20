@@ -44,10 +44,21 @@ public class MultBehaviour extends WakerBehaviour {
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
+			sendFailureMessage(myAgent.getName() + " failed formatting the answer message ", receiver);
 		}
 		myAgent.send(response);
 		System.out.println("Message sent from : " + myAgent.getName() + " to : " + receiver.getName());
 	}
+	
+	
+	private void sendFailureMessage(String content, AID receiver){
+		ACLMessage failureMessage = new ACLMessage(ACLMessage.FAILURE);
+		failureMessage.setContent(content);
+		failureMessage.addReceiver(receiver);
+		myAgent.send(failureMessage);
+	}
+	
+	
 
 	@Override
 	public void onWake() {
@@ -68,6 +79,7 @@ public class MultBehaviour extends WakerBehaviour {
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
+				sendFailureMessage(myAgent.getName() + " failed parsing the request", m_order.getSender());
 			}
 				
 			//Exécution de la requête
