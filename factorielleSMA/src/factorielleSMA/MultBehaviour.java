@@ -11,15 +11,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jade.core.Agent;
 import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.WakerBehaviour;
 import jade.lang.acl.ACLMessage;
 
-import java.lang.Thread;
-
-public class MultBehaviour extends OneShotBehaviour {
+public class MultBehaviour extends WakerBehaviour {
 	
-	public MultBehaviour(Agent a, ACLMessage order) {
-		super(a);
+	public MultBehaviour(Agent a, long timeout, ACLMessage order) {
+		super(a, timeout);
 		m_order = order;
 	}
 	
@@ -51,8 +49,8 @@ public class MultBehaviour extends OneShotBehaviour {
 		System.out.println("Message sent from : " + myAgent.getName() + " to : " + receiver.getName());
 	}
 
-	
-	public void action() {
+	@Override
+	public void onWake() {
 			int result;
 			int op1 = 0;
 			int op2 = 0;
@@ -74,15 +72,6 @@ public class MultBehaviour extends OneShotBehaviour {
 				
 			//Exécution de la requête
 			result = op1 * op2;
-			
-			//On s'endort avant d'envoyer la r�ponse
-			try {
-				int wait_time = 500 + (int)(Math.random() * (10000 - 500 + 1)); 
-				System.out.println("let's wait " + wait_time + "ms.");
-				Thread.sleep(wait_time);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 			
 			//Envoi de la réponse
 			requestSender = m_order.getSender();
