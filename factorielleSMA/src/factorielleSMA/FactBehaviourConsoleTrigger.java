@@ -28,22 +28,28 @@ public class FactBehaviourConsoleTrigger extends OneShotBehaviour {
 	@Override
 	public void action() {		
 		int nb = 0;
-		System.out.println("J'ai lancÃ© mon traitement de behaviour");
+		int input = 0;
+		System.out.println("Calcul lancé...");
 		String messageContent = m_order.getContent();
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			//Parsing received JSON message
 			JsonNode jrootNode = mapper.readValue(messageContent, JsonNode.class);
 			nb = jrootNode.path("content").path("numbers").path(0).intValue();
-		}
-		catch (Exception ex) {
+			
+			JsonNode inputNode = jrootNode.path("meta").path("input");
+			if (!inputNode.isMissingNode()) {
+				input = inputNode.intValue();
+			} else {
+				input = jrootNode.path("content").path("numbers").path(0).intValue();
+			}
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 			
 			
 		
-		if (nb > 0)
-		{
+		if (nb > 0) {
 			System.out.println("Calculation of " + nb + " factorial value");
 			ACLMessage message2 = new ACLMessage(ACLMessage.REQUEST);
 
@@ -55,22 +61,26 @@ public class FactBehaviourConsoleTrigger extends OneShotBehaviour {
 				list.add(1);
 				list.add(nb);
 				numbersMap.put("numbers", list);
+				// Add a meta part to the message to keep a track of what the initial value was
+				Map<String, Integer> metaMap = new HashMap<String, Integer>();
+				metaMap.put("input", input);
+				
 				Map<String, Object> contentMap = new HashMap<String, Object>();
 				contentMap.put("content", numbersMap);
+				contentMap.put("meta", metaMap);
 				StringWriter sw = new StringWriter();
 				writerMapper.writeValue(sw, contentMap);
 				message2.setContent(sw.toString());
+//				System.out.println("trigger message: "+ message2.getContent());
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
 			}
-			
 			message2.addReceiver(searchReceiver());
 			myAgent.send(message2);
 		}
 		else
 			System.out.println("No result !");
-
 	}
 	
 	
@@ -81,19 +91,15 @@ public class FactBehaviourConsoleTrigger extends OneShotBehaviour {
 		sd.setType("Operations");
 		sd.setName("Multiplication");
 		template.addServices(sd);
-//		System.out.println(template);
 		try {
 			DFAgentDescription[] result = DFService.search(this.myAgent, template);
-//			System.out.println("number of mult agents: " + result.length);
 			if (result.length > 0){
 				int indice = ((int)Math.random() * result.length);
 				aid = result[indice].getName();
 			}
-		}catch (FIPAException e)
-		{
+		} catch (FIPAException e) {
 			e.printStackTrace();
 		}
-		
 		return aid;
 	}
 	

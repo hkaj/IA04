@@ -20,8 +20,8 @@ public class MultBehaviour extends WakerBehaviour {
 		super(a, timeout);
 		m_order = order;
 	}
-	
-	private void sendResult(int res, int op1, int op2, AID receiver) {
+
+	private void sendResult(int res, int op1, int op2, int input, AID receiver) {
 		ACLMessage response = new ACLMessage(ACLMessage.INFORM);
 		response.addReceiver(receiver);
 
@@ -35,8 +35,11 @@ public class MultBehaviour extends WakerBehaviour {
 			resultList.add(res);
 			numbersMap.put("numbers", list);
 			numbersMap.put("result", resultList);
+			Map<String, Integer> metaMap = new HashMap<String, Integer>();
+			metaMap.put("input", input);
 			Map<String, Object> contentMap = new HashMap<String, Object>();
 			contentMap.put("content", numbersMap);
+			contentMap.put("meta", metaMap);
 			StringWriter sw = new StringWriter();
 			writerMapper.writeValue(sw, contentMap);
 			response.setContent(sw.toString()); 
@@ -65,7 +68,8 @@ public class MultBehaviour extends WakerBehaviour {
 			int result;
 			int op1 = 0;
 			int op2 = 0;
-			AID requestSender = new AID(); 
+			int input = 0;
+			AID requestSender = new AID();
 			
 			System.out.println("My name is " + myAgent.getName() + " and I've been asked to make a multiplication !");
 			
@@ -76,6 +80,7 @@ public class MultBehaviour extends WakerBehaviour {
 				JsonNode jrootNode = mapper.readValue(orderContent, JsonNode.class);
 				op1 = jrootNode.path("content").path("numbers").path(0).intValue();
 				op2 = jrootNode.path("content").path("numbers").path(1).intValue();
+				input = jrootNode.path("meta").path("input").intValue();  // might need to remove "path(0)"
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
@@ -87,7 +92,7 @@ public class MultBehaviour extends WakerBehaviour {
 			
 			//Envoi de la réponse
 			requestSender = m_order.getSender();
-			this.sendResult(result, op1, op2, requestSender);
+			this.sendResult(result, op1, op2, input, requestSender);
 	}
 	
 	

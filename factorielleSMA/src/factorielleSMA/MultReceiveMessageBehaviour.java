@@ -22,7 +22,9 @@ public class MultReceiveMessageBehaviour extends CyclicBehaviour {
 				System.out.println("MultAgent will wait " + wait_time + " ms before performing multiplication");
 				
 				myAgent.addBehaviour(new MultBehaviour(myAgent, wait_time, order));
-			}			
+			} else {
+				System.out.println("Invalid request sent to a multiplicator agent.");
+			}
 		}
 
 	}
