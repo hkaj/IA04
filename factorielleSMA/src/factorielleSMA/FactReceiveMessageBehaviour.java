@@ -18,8 +18,6 @@ public class FactReceiveMessageBehaviour extends CyclicBehaviour {
 		{
 			if (order.getPerformative() == ACLMessage.REQUEST)
 			{
-				String sender = order.getSender().toString();
-				System.out.println(sender);
 				if (order.getSender().toString().equals("( agent-identifier :name console )"))
 				{
 					myAgent.addBehaviour(new FactBehaviourConsoleTrigger(myAgent, order));
