@@ -1,5 +1,8 @@
 package model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import view.ChatWindow;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -11,7 +14,7 @@ public class ChatAgent extends Agent {
 
 	@Override
 	protected void setup() {
-		//Génération de la Fenetre
+		//Gï¿½nï¿½ration de la Fenetre
 		ChatWindow chatWindow = new ChatWindow("", this);
 		addBehaviour(new ChatBehaviourReceiveMessage(this));
 		addBehaviour(new ChatBehaviourSendMessage(this));
@@ -29,4 +32,23 @@ public class ChatAgent extends Agent {
 					e.printStackTrace();
 				}
 	}
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener){
+		m_pcs.addPropertyChangeListener(listener);
+	}
+	
+	public void removePropertyChangeListener(PropertyChangeListener listener){
+		m_pcs.removePropertyChangeListener(listener);
+	}
+	
+	public void firePropertyChange(String propertyName, Object oldValue, Object newValue){
+		m_pcs.firePropertyChange(propertyName, oldValue, newValue);
+	}
+	
+	public void addNewMessage(String text) {
+		// TODO Auto-generated method stub	
+	}
+	
+	//Members
+	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 }
