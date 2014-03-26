@@ -18,6 +18,9 @@ public class ChatBehaviourReceiveMessage extends CyclicBehaviour {
 			if (message.getPerformative() == ACLMessage.INFORM){
 				myAgent.addBehaviour(new ChatBehaviourMessageProcessing(myAgent, message));
 			}
+			else if (message.getPerformative() == ACLMessage.CONFIRM){
+				myAgent.addBehaviour(new ChatBehaviourManageMult(myAgent, message));
+			}
 		}
 			
 	}

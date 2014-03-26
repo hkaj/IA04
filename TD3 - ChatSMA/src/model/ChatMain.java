@@ -1,5 +1,6 @@
 package model;
 
+import mult.MultAgent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -31,6 +32,22 @@ public class ChatMain {
 			chatSecondAgent.start();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		try{
+			Profile pMult = new ProfileImpl(SECOND_PROPERTIES_FILE);
+			ContainerController multContainer = rt.createAgentContainer(pMult);
+			
+			//Création de trois agents multiplicateurs
+			AgentController multAgent = multContainer.createNewAgent("multAgent1", MultAgent.class.getName(), new Object[0]);
+			AgentController multAgent2 = multContainer.createNewAgent("multAgent2", MultAgent.class.getName(), new Object[0]);
+			AgentController multAgent3 = multContainer.createNewAgent("multAgent3", MultAgent.class.getName(), new Object[0]);
+			multAgent.start();
+			multAgent2.start();
+			multAgent3.start();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
 		}
 
 	}

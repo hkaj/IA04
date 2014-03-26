@@ -2,4 +2,4 @@ main=true
 gui=true
 platform-id=tp3
 local-host=127.0.0.1
-local-port=1339
+local-port=1340
