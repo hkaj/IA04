@@ -19,9 +19,16 @@ public class ChatMain {
 			Profile p = new ProfileImpl(MAIN_PROPERTIES_FILE);
 			ContainerController chatAgentContainer = rt.createMainContainer(p);
 			AgentController chatAgent = chatAgentContainer.createNewAgent("usr1", ChatAgent.class.getName(), new Object[0]);
-			AgentController chatAgent2 = chatAgentContainer.createNewAgent("usr2", ChatAgent.class.getName(), new Object[0]);
 			chatAgent.start();
-			chatAgent2.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			Profile p2 = new ProfileImpl(SECOND_PROPERTIES_FILE);
+			ContainerController chatSecondaryContainer = rt.createAgentContainer(p2);
+			AgentController chatSecondAgent = chatSecondaryContainer.createNewAgent("usr2", ChatAgent.class.getName(), new Object[0]);
+			chatSecondAgent.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
