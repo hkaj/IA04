@@ -1,5 +1,7 @@
 main=false
 gui=true
 platform-id=tp3
-local-host=127.0.0.1  // a modifier pour travailler avec plsr machines
-local-port=1340  // idem
+local-host=OUR_LOCAL_IP
+local-port=1341
+host=REMOTE_HOST_IP
+port=1340
