@@ -18,14 +18,21 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
+import sudoku_solver.EnvAgent;
+
 public class SudokuWindow extends JFrame implements PropertyChangeListener {
 
-	public SudokuWindow() throws HeadlessException {
-		this("");
+	public SudokuWindow(EnvAgent agent) throws HeadlessException {
+		this("", agent);
 	}
 
-	public SudokuWindow(String title) throws HeadlessException {
+	public SudokuWindow(String title, EnvAgent agent) throws HeadlessException {
 		super(title);
+		
+		m_agent = agent;
+		if (m_agent != null){
+			m_agent.addPropertyChangeListener(this);
+		}
 		
 		BorderLayout mainLayout = new BorderLayout();
 		setLayout(mainLayout);
@@ -80,7 +87,7 @@ public class SudokuWindow extends JFrame implements PropertyChangeListener {
 	
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
-		SudokuWindow win = new SudokuWindow("Sudoku Window Test");
+		SudokuWindow win = new SudokuWindow("Sudoku Window Test", null);
 	}
 
 	
@@ -92,6 +99,8 @@ public class SudokuWindow extends JFrame implements PropertyChangeListener {
 	
 	
 	//Members
+	EnvAgent m_agent;
+	
 	static final int sizeOfSudoku = 9;
 	JMenuBar m_menuBar;
 	JMenu m_fileMenu;

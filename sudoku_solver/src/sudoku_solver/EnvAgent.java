@@ -1,5 +1,7 @@
 package sudoku_solver;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,6 +14,7 @@ public class EnvAgent extends Agent {
 	
 	public EnvAgent(String filename) throws FileNotFoundException, IOException {
 		super();
+		m_pcs = new PropertyChangeSupport(this);
 		
 		BufferedReader br = new BufferedReader(new FileReader("file.txt"));
 	    try {
@@ -43,9 +46,25 @@ public class EnvAgent extends Agent {
 		// TODO Auto-generated method stub
 		super.setup();
 	}
+
+	//Events
+	public void addPropertyChangeListener(PropertyChangeListener listener){
+		m_pcs.addPropertyChangeListener(listener);
+	}
 	
+	public void removePropertyChangeListener(PropertyChangeListener listener){
+		m_pcs.removePropertyChangeListener(listener);
+	}
+	
+	public void firePropertyChange(String propertyName, Object oldValue, Object newValue){
+		m_pcs.firePropertyChange(propertyName, oldValue, newValue);
+	}
+	
+	//Getters & Setters
 	public Case[][] getSudoku() {return m_sudoku;}
 	public void setSudoku(Case[][] m_sudoku) {this.m_sudoku = m_sudoku;}
 
+	//Members
 	private Case m_sudoku[][];
+	private PropertyChangeSupport m_pcs;
 }
