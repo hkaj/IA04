@@ -2,3 +2,4 @@
 *.txt
 *.prefs
 *.class
+*/bin/*

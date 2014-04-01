@@ -1,0 +1,41 @@
+Agent Simulation parle à Agent environnement et lui dit de répondre à Agent Analyse.
+Ne pas utiliser le DF (les agents d'analyse connaissent en dur l'agent simulation auprès duquel ils s'enregistrent)
+L'agent analyse une fois son calcul fait retourne à Simulation qui attend le retour de tous les agents d'analyse pour envoyer les résultats à Environnement.
+Environnement compulse ces résultats, met à jour la grille et cherche la condition d'arrêt.
+
+PERFORMATIFS:
+- enregistrement d'analyse auprès de simulation -> SUBSCRIBE
+- demande d'execution de calcul (env -> analyse) -> REQUEST
+- résultat d'un calcul (analyse -> simulation) -> INFORM
+
+CONDITION D'ARRÊT :
+- Toutes les cases ont une valeur fixée et plus de possibilités
+- C'est environnement qui la détecte
+- Message INFORM à Simulation pour lui indiquer la fin.
+
+STRUCTURES :
+Case = {int, List<Integer> pos[9]}; // Class
+Case sudoku[9][9];
+
+BEHAVIOURS:
+
+Simulation:
+	Réception des messages (CYCLIC)  // quand on reçoit un message, soit c'est une request et on on va dans inscription des agents, soit c'est un INFORM et on va dans "traitement des réponses"
+	Inscription des agents d'analyse (OneShot)
+	traitement d'un agent (OneShot)
+	La cyclic va incrémenter un compteur de 1 à 27, une fois les 27 agents terminés, elle envoie les info à environnement qui check si le sudoku est fini puis réninit le compteur pour pouvoir refaire un tour.
+	Si oui -> affichage du sudoku && inform a Simulation pour afficher un message de fin 
+	Sinon -> relancer les agents d'analyse
+
+Analyse: 
+	Réception de message (CYCLIC)
+	Analyse (Sequential) fait tourner les 3 algo
+	Souscription -> oneShot
+
+Environnement: 
+	Reception
+	Mise à jour de la grille (valeur et possibilité)
+	Lancement des agents d'analyse
+
+COOL STUFF:
+Quand un agent d'analyse n'a rien à faire, il peut l'afficher ou le faire remonter pour dire à l'utilisateur combien d'agents d'analyse n'ont pas terminé.
