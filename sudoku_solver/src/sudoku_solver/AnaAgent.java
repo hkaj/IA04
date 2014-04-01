@@ -2,12 +2,10 @@ package sudoku_solver;
 
 import jade.core.Agent;
 
-public class SimulAgent extends Agent {
-	
+public class AnaAgent extends Agent {
 	@Override
 	protected void setup() {
-		this.addBehaviour(new SimRecMsgBehaviour(this));
+		// TODO Auto-generated method stub
 		super.setup();
 	}
-
 }
