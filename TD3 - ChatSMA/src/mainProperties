@@ -1,0 +1,7 @@
+main=true
+gui=true
+platform-id=tp3
+local-host=OUR_LOCAL_IP
+local-port=1340
+host=REMOTE_HOST_IP
+port=1341
