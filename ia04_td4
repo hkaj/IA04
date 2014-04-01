@@ -7,6 +7,38 @@ PERFORMATIFS:
 - enregistrement d'analyse auprès de simulation -> SUBSCRIBE
 - demande d'execution de calcul (env -> analyse) -> REQUEST
 - résultat d'un calcul (analyse -> simulation) -> INFORM
+- (simulation -> env)
+
+CONTENU DES MESSAGES :
+//Analyse -> Simulation
+{
+	"content" : 
+	{
+		"index" : "3",
+		"cases" : [Case1, ..., Case9]	//ArrayList
+	}
+}
+
+//Simulation -> Environnement
+{
+	"content" :
+	{
+		"1" : cases1,	//ArrayList
+		"2" : cases2,	//ArrayList
+		...
+		"27" : cases27	//ArrayList
+	}
+}
+
+
+//Environnement -> Analyse
+{
+	"content" :
+	{
+		"index" : "3",
+		"cases" : [Case1, ..., Case9]	//ArrayList
+	}
+}
 
 CONDITION D'ARRÊT :
 - Toutes les cases ont une valeur fixée et plus de possibilités
