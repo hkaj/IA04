@@ -24,7 +24,7 @@ public class EnvCreateLinkBehaviour extends OneShotBehaviour {
 		agent.setConnectionAnalyseStructure(anaAgentId);
 		
 		//Envoi de la première requête d'envoi
-		myAgent.addBehaviour(new EnvSendRequestToAnalBehaviour(myAgent, anaAgentId));
+		myAgent.addBehaviour(new EnvSendRequestToAnalBehaviour(myAgent, anaAgentId, m_listOfAnalAgentmessage.getSender()));
 		
 	}
 	

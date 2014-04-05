@@ -176,7 +176,13 @@ public class EnvAgent extends Agent {
 	}
 	
 	
-	
+	public boolean isSudokuSolved() {
+		for (int i = 0; i < 9; i++)
+			for (int j = 0; j < 9; j++)
+				if (m_sudoku[i][j].getValue() == 0)
+					return false;
+		return true;
+	}
 	
 	
 	//Members

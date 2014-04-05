@@ -33,7 +33,7 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 			for(Iterator<Entry<AID,ArrayList<Case>>> it = ensembleCases.entrySet().iterator(); it.hasNext();){
 				Entry<AID, ArrayList<Case>> pairs = (Entry<AID, ArrayList<Case>>)it.next();
 		        processAIDandCases((AID) pairs.getKey(), (ArrayList<Case>) pairs.getValue());
-		        myAgent.addBehaviour(new EnvSendRequestToAnalBehaviour(myAgent, (AID) pairs.getKey()));
+		        myAgent.addBehaviour(new EnvSendRequestToAnalBehaviour(myAgent, (AID) pairs.getKey(), m_sudokuNewValuesMessage.getSender()));
 		    }
 		}
 		catch (Exception ex) {

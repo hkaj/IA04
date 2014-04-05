@@ -13,9 +13,10 @@ import jade.lang.acl.ACLMessage;
 
 public class EnvSendRequestToAnalBehaviour extends OneShotBehaviour {
 
-	public EnvSendRequestToAnalBehaviour(Agent a, AID receiver) {
+	public EnvSendRequestToAnalBehaviour(Agent a, AID receiver, AID simul) {
 		super(a);
 		m_receiver = receiver;
+		m_simul = simul;
 	}
 
 	@Override
@@ -43,9 +44,13 @@ public class EnvSendRequestToAnalBehaviour extends OneShotBehaviour {
 			}
 			
 			
-			
 			myAgent.send(order);
-		}else{
+			
+		}else if (agent.isSudokuSolved()){
+			ACLMessage sudokuSolvedMessage = new ACLMessage(ACLMessage.CONFIRM);
+			sudokuSolvedMessage.addReceiver(m_simul);
+			myAgent.send(sudokuSolvedMessage);
+		} else {
 			System.out.println("Zone résolue, pas de message envoyé");
 		}
 
@@ -53,5 +58,6 @@ public class EnvSendRequestToAnalBehaviour extends OneShotBehaviour {
 	
 	//Members
 	private AID m_receiver;
+	private AID m_simul;
 
 }
