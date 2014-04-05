@@ -16,6 +16,19 @@ Agent 18 -> 26 : carrés de haut-gauche à bas-droite
 | 7 | 8 | 9 |
 -------------
 
+NOTES: 
+- Simulation enregistre les AID des AnaAgents.
+
+- Chaque fois qu'il en a un nouveau, il envoie un message à Env avec le reply-to configuré pour répondre à l'AnaAgent.
+
+- Env prend cet AID, il le stocke dans une liste nommée par exemple anaAgents et envoie un message à cet agent avec une colonne/ligne/carré à analyser en fonction de son ordre d'arrivée (qu'on peut déterminer avec len(anaAgents)).
+
+- l'AnaAgent calcule et répond à SimAgent qui stocke la réponse dans une HashMap<AID, ArrayList<Case>>. La HashMap aura 27 ArrayList qui correspondront à chaque ligne/colonne/carré en suivant la convention (que seul Env connait).
+
+- Une fois que la HashMap est pleine (len == 27) on l'envoie à Env qui met à jour le sudoku.
+Et là l'algo recommence mais sans l'étape d'enregistrement des AnaAgents et les INFORM-REF(Sim -> Env). Env envoie directement les 27 requêtes.
+
+
 PERFORMATIFS:
 - enregistrement d'analyse auprès de simulation -> SUBSCRIBE
 - demande d'execution de calcul (env -> analyse) -> REQUEST
@@ -23,40 +36,41 @@ PERFORMATIFS:
 - (simulation -> env)
 
 CONTENU DES MESSAGES :
-//Analyse -> Simulation (résultat de calcul)
+
+//Analyse -> Simulation (résultat de calcul) TYPE = INFORM
 {
 	"content" : 
 	{
-		"index" : "3",
 		"cases" : [Case1, ..., Case9]	//ArrayList
 	}
 }
 
-//Analyse -> Simulation (registration)
+//Analyse -> Simulation (registration) TYPE = SUBSCRIBE
 {
-	"content" : 
-	{
-		"AID" : "AnaAgentAID"
-	}
+	// rien, on a seulement besoin du Sender et du performatif
 }
 
-//Simulation -> Environnement
+//Simulation -> Environnement (résultats d'un tour d'algo) TYPE = INFORM
 {
 	"content" :
 	{
-		"1" : cases1,	//ArrayList
-		"2" : cases2,	//ArrayList
+		// HashMap<AID, ArrayList<Case>>
+		AID1 : cases1,
+		AID2 : cases2,
 		...
-		"27" : cases27	//ArrayList
+		AID27 : cases27
 	}
 }
 
+//Sim -> Env (fournit un nouveau AnaAgent à Env) TYPE = INFORM-REF | REPLY_TO = AID(AnaAgent, true)
+{
+	// rien, le reply-to contient l'AID et le performatif permet de filtrer
+}
 
-//Environnement -> Analyse
+//Environnement -> Analyse (demande de traitement) TYPE = REQUEST
 {
 	"content" :
 	{
-		"index" : "3",
 		"cases" : [Case1, ..., Case9]	//ArrayList
 	}
 }
