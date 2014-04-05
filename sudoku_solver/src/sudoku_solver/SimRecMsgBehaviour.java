@@ -1,7 +1,12 @@
 package sudoku_solver;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,6 +40,19 @@ public class SimRecMsgBehaviour extends CyclicBehaviour {
 				}
 			} else if (order.getPerformative() == ACLMessage.INFORM) {
 				// handle the analysis agents responses
+				String content = order.getContent();
+				ObjectMapper mapper = new ObjectMapper();
+				List<Case> resultPart = new ArrayList<Case>(9);
+				int idx = 0;
+				try {
+					JsonNode jrootNode = mapper.readValue(content, JsonNode.class);
+					idx = jrootNode.path("content").path("index").path(0).intValue();
+					resultPart = mapper.readValue(jrootNode.path("content").path("cases").textValue(), new TypeReference<List<Case>>(){});					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				
 			} else {
 				System.out.println("SimulAgent received an unexpected message");
 			}
@@ -46,5 +64,6 @@ public class SimRecMsgBehaviour extends CyclicBehaviour {
 	ArrayList<AID> m_anaAgents;
 	AID m_envAgent;
 	SimulAgent m_myAgent;
+	ArrayList<ArrayList<Case>> m_result;
 
 }

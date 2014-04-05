@@ -3,6 +3,19 @@ Ne pas utiliser le DF (les agents d'analyse connaissent en dur l'agent simulatio
 L'agent analyse une fois son calcul fait retourne à Simulation qui attend le retour de tous les agents d'analyse pour envoyer les résultats à Environnement.
 Environnement compulse ces résultats, met à jour la grille et cherche la condition d'arrêt.
 
+CONVENTION D'ORDRE:
+Agents 0 -> 8 : colonnes de gauche à droite
+Agent 9 -> 17 : lignes de haut en bas
+Agent 18 -> 26 : carrés de haut-gauche à bas-droite
+
+-------------
+| 1 | 2 | 3 |
+-------------
+| 4 | 5 | 6 |
+-------------
+| 7 | 8 | 9 |
+-------------
+
 PERFORMATIFS:
 - enregistrement d'analyse auprès de simulation -> SUBSCRIBE
 - demande d'execution de calcul (env -> analyse) -> REQUEST
