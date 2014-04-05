@@ -9,11 +9,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EnvAgent extends Agent {
 	
-	private enum Structure {LINE, COLUMN, SQUARE};
+	public static enum Structure {LINE, COLUMN, SQUARE};
 	
 	public EnvAgent(String filename) throws FileNotFoundException, IOException {
 		super();
@@ -48,6 +49,11 @@ public class EnvAgent extends Agent {
 	protected void setup() {
 		addBehaviour(new EnvReceiveMessageBehaviour(this));		
 	}
+	
+	
+	
+	
+	
 
 	//Events
 	public void addPropertyChangeListener(PropertyChangeListener listener){
@@ -63,17 +69,18 @@ public class EnvAgent extends Agent {
 		m_pcs.firePropertyChange(propertyName, oldValue, newValue);
 	}
 	
+	
+	
+	
+	
+	
 	//Getters & Setters
 	public Case[][] getSudoku() {return m_sudoku;}
-	public void setSudoku(Case[][] m_sudoku) {this.m_sudoku = m_sudoku;}
+	@SuppressWarnings("unused")
+	private void setSudoku(Case[][] m_sudoku) {this.m_sudoku = m_sudoku;}
 	
 	
-	//Changer les informations d'une case
-	private void changeSudokuCase (String analyseId, Case cas) {
-		//TODO
-		
-		firePropertyChange("Case_changed", null, cas);
-	}
+	
 	
 	
 	//Gestion de la table de correspondance entre AgentAnalyse et ligne, colonne et carré
@@ -93,14 +100,94 @@ public class EnvAgent extends Agent {
 			System.out.println("Too many agents try to resolve the sudoku");
 	}
 	
-	public Structure getTypeOfConnectionFromAnalyseId (int id){return connectionArray.get(id).getType();}
-	public int getIndexOfConnectionFromAnalyseId (int id) {return connectionArray.get(id).getIndex();}
+	public Structure getTypeOfConnectionFromAnalyseId (AID id){return connectionArray.get(id).getType();}
+	public int getIndexOfConnectionFromAnalyseId (AID id) {return connectionArray.get(id).getIndex();}
+	
+	public ArrayList<Case> getListOfCasesFromAID(AID id){
+		Structure type = connectionArray.get(id).getType();
+		int index = connectionArray.get(id).getIndex();
+		ArrayList<Case> newList = new ArrayList<>(9);
+		
+		if (type == EnvAgent.Structure.LINE){
+			
+			for(int i = 0; i < 9; i++){
+				newList.add(m_sudoku[index][i]);
+			}
+			
+		} else if (type == EnvAgent.Structure.COLUMN){
+			
+			for(int i = 0; i < 9; i++){
+				newList.add(m_sudoku[i][index]);
+			}
+			
+		} else{
+			
+			int starti = (index % 3) * 3, i = starti;
+			int startj = index, j = startj;
+			
+			while(j != startj + 3){
+				newList.add(m_sudoku[i][j]);
+				
+				if ((i+1) % 3 == 0){
+					j++; i = starti;
+				}
+				else
+					i++;
+			}
+			
+		}
+		
+		return newList;
+	}
+	
+	public boolean isZoneResolved(AID id){
+		EnvironnementAnalyseCorresp corresp = connectionArray.get(id);
+		int index = corresp.getIndex();
+		Structure type = corresp.getType();
+		
+		if (type == EnvAgent.Structure.LINE){
+			
+			for(int i = 0; i < 9; i++){
+				if (m_sudoku[index][i].getValue() == 0)
+					return false;
+			}
+		} else if (type == EnvAgent.Structure.COLUMN){
+			for(int i = 0; i < 9; i++){
+				if (m_sudoku[i][index].getValue() == 0)
+					return false;
+			}
+			
+		} else{
+			int starti = (index % 3) * 3, i = starti;
+			int startj = index, j = startj;
+			while(j != startj + 3){
+				if (m_sudoku[i][j].getValue() == 0)
+					return false;
+				
+				if ((i+1) % 3 == 0){
+					j++; i = starti;
+				}
+				else
+					i++;
+			}
+		}
+		
+		return true;
+	}
+	
+	
+	
 	
 	
 	//Members
 	private Case m_sudoku[][];
-	private PropertyChangeSupport m_pcs;
 	private HashMap<AID, EnvironnementAnalyseCorresp> connectionArray;
+	
+	private PropertyChangeSupport m_pcs;
+	
+	
+	
+	
 	
 	
 	
