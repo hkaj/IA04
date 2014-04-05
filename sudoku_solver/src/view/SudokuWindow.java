@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
+import sudoku_solver.Case;
 import sudoku_solver.EnvAgent;
 
 public class SudokuWindow extends JFrame implements PropertyChangeListener {
@@ -93,7 +94,14 @@ public class SudokuWindow extends JFrame implements PropertyChangeListener {
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		
+		if (evt.getPropertyName() == "Sudoku_changed"){
+			Case[][] sudoku = (Case[][]) evt.getNewValue();
+			for(int i = 0; i < sizeOfSudoku; ++i){
+				for (int j = 0; j < sizeOfSudoku; ++j){
+					m_sudokuArrayLabels[i][j].setText(Integer.toString(sudoku[i][j].getValue()));
+				}
+			}
+		}
 	}
 	
 	
