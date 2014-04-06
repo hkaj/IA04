@@ -14,7 +14,7 @@ public class DetermineSingleValue extends OneShotBehaviour {
 	@Override
 	public void action() {
 		int[][] numberApparitions = new int[9][2];  // frequency & index where we found it 
-		for (int i=0; i < 10 ; ++i) {
+		for (int i=0; i < 9 ; ++i) {
 			numberApparitions[i][0] = 0;
 			numberApparitions[i][1] = 0;
 		}
@@ -27,7 +27,7 @@ public class DetermineSingleValue extends OneShotBehaviour {
 			}
 		}
 		// for each possibility occurring only once, its value is set up in the case where it was found
-		for (int i=0; i < 10 ; ++i) {
+		for (int i=0; i < 9 ; ++i) {
 			if (numberApparitions[i][0] == 1) {
 				array.set(numberApparitions[i][1], new Case(i+1));
 			}

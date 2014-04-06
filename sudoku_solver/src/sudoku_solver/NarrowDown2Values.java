@@ -16,7 +16,7 @@ public class NarrowDown2Values extends OneShotBehaviour {
 	@Override
 	public void action() {
 		int[][] numberApparitions = new int[9][3];  // frequency & index where we found it 
-		for (int i=0; i < 10 ; ++i) {
+		for (int i=0; i < 9 ; ++i) {
 			numberApparitions[i][0] = 0;
 			numberApparitions[i][1] = 0;
 			numberApparitions[i][2] = 0;

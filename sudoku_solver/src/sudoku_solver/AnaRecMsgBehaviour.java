@@ -28,10 +28,9 @@ public class AnaRecMsgBehaviour extends CyclicBehaviour {
 				ArrayList<Case> array = new ArrayList<Case>();
 				try {
 					JsonNode jrootNode = mapper.readValue(content, JsonNode.class);
-					array = mapper.readValue(
-							jrootNode.path("content").path("cases").textValue(),
-							new TypeReference<List<Case>>(){}
-					);
+					String json = jrootNode.path("content").path("cases").toString();
+					System.out.println("AnaAgent a reçu une requete : " + json);
+					array = mapper.readValue(json, new TypeReference<ArrayList<Case>>(){});
 					m_myAgent.set_m_array(array);
 				} catch (Exception e) {
 					e.printStackTrace();

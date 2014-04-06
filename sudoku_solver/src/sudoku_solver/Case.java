@@ -8,7 +8,7 @@ public class Case {
 		m_value = 0;
 		m_possibilities = new ArrayList<Integer>();
 		for (int i = 1; i <= 9; ++i){
-			m_possibilities.add(i);
+			m_possibilities.add(new Integer(i));
 		}
 	}
 	
