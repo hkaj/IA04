@@ -96,6 +96,12 @@ public class EnvAgent extends Agent {
 	
 	//Getters & Setters
 	public Case[][] getSudoku() {return m_sudoku;}
+	public int getCaseValue(int lig, int col) {
+		if (lig < 9 && col < 9)
+			return m_sudoku[lig][col].getValue();
+		else
+			return -1;
+	}
 	@SuppressWarnings("unused")
 	private void setSudoku(Case[][] m_sudoku) {this.m_sudoku = m_sudoku;}
 	

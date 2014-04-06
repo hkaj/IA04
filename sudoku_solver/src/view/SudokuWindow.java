@@ -59,7 +59,10 @@ public class SudokuWindow extends JFrame implements PropertyChangeListener {
 		m_sudokuArrayLabels = new JLabel[sizeOfSudoku][sizeOfSudoku];
 		for (int lig = 0; lig < sizeOfSudoku; ++lig)
 			for (int col = 0; col < sizeOfSudoku; ++col){
-				m_sudokuArrayLabels[lig][col] = new JLabel("0", SwingConstants.CENTER);
+				if (m_agent != null)
+					m_sudokuArrayLabels[lig][col] = new JLabel(Integer.toString(m_agent.getCaseValue(lig, col)), SwingConstants.CENTER);
+				else
+					m_sudokuArrayLabels[lig][col] = new JLabel("0", SwingConstants.CENTER);
 				setLabelBorderColor(lig, col);
 				m_centerPanel.add(m_sudokuArrayLabels[lig][col]);
 			}
