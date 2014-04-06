@@ -15,14 +15,13 @@ public class NarrowDown2Values extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		int[][] numberApparitions = new int[9][3];  // frequency & index where we found it 
-		for (int i=0; i < 9 ; ++i) {
-			numberApparitions[i][0] = 0;
-			numberApparitions[i][1] = 0;
-			numberApparitions[i][2] = 0;
-		}
+		System.out.println("Narrowing down 2 values");
 		ArrayList<Case> array = m_myAgent.get_m_array();
-		ArrayList<Integer[]> twoPossCases= new ArrayList<Integer[]>();
+		ArrayList<Integer[]> twoPossCases = new ArrayList<Integer[]>();
+		for (Case c : array) {
+			System.out.println("VALUE : "+c.getValue());
+			System.out.println("POS : "+c.getPossibilities());
+		}
 		// count the occurrences of each possibilities
 		for (Case c1 : array) {
 			if (c1.getPossibilities().size() == 2) {
@@ -31,15 +30,34 @@ public class NarrowDown2Values extends OneShotBehaviour {
 						new Integer(c1.getPossibilities().get(0)),
 						new Integer(c1.getPossibilities().get(1))
 				};
+				System.out.println(myAgent.getLocalName()+" : TWOPOSSCASE : "+tmp[0].intValue()+", "+tmp[1].intValue()+", "+tmp[2].intValue());
 				twoPossCases.add(tmp);
 			}
 		}
+		
+		ArrayList<Integer> idxToIgnore = new ArrayList<Integer>();
 		for (Integer[] tab1 : twoPossCases) {
 			for (Integer[] tab2 : twoPossCases) {
-				List<Integer> tab2List = Arrays.asList(tab2);
-				if ((tab2List.contains(tab1[1])) && (tab2List.contains(tab1[2]))) {
-					// the 2 cases got the same possibilities
-					removePossibilities(array, tab1[0].intValue(), tab2[0].intValue(), tab1[1], tab1[2]);
+				if ((twoPossCases.indexOf(tab1) != twoPossCases.indexOf(tab2)) && (!idxToIgnore.contains(twoPossCases.indexOf(tab1)))) {
+					List<Integer> tab2List = Arrays.asList(tab2);
+					tab2List = new ArrayList<Integer>(tab2List);
+					tab2List.remove(0);
+					if ((tab2List.contains(tab1[1])) && (tab2List.contains(tab1[2]))) {
+						// the 2 cases got the same possibilities
+						System.out.println(myAgent.getLocalName()+" : 2 POS IN ONLY 2 CASES : "+tab1[0]+" and "+tab1[1]+" at "+tab1[1]+" and "+tab1[2]);
+//						for (Case c : array) {
+//							System.out.println("VALUE : "+c.getValue());
+//							System.out.println("POS : "+c.getPossibilities());
+//						}
+						removePossibilities(array, tab1[0], tab2[0], tab1[1], tab1[2]);
+						idxToIgnore.add(twoPossCases.indexOf(tab2));  // so that we don't try to remove them again
+						System.out.println("AFTER REMOVING THE CHYBRE :");
+						for (Case c : array) {
+							System.out.println("VALUE : "+c.getValue());
+							System.out.println("POS : "+c.getPossibilities());
+						}
+					}
+
 				}
 			}
 		}
@@ -56,6 +74,7 @@ public class NarrowDown2Values extends OneShotBehaviour {
 					ArrayList<Integer> p = c.getPossibilities();
 					p.remove(p1);
 					p.remove(p2);
+					c.setPossibilities(p);
 				}
 			}
 		

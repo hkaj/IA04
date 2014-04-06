@@ -32,13 +32,18 @@ public class AnaRecMsgBehaviour extends CyclicBehaviour {
 					String json = jrootNode.path("content").path("cases").toString();
 					array = mapper.readValue(json, new TypeReference<ArrayList<Case>>(){});
 					m_myAgent.set_m_array(array);
+//					System.out.println("LIGNE RECUE");
+//					for (Case c : array) {
+//						System.out.println("VALUE : "+c.getValue());
+//						System.out.println("POS : "+c.getPossibilities());
+//					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				ProcessRequestBehaviour processBehaviour = new ProcessRequestBehaviour(m_myAgent);
-				processBehaviour.addSubBehaviour(new NarrowDown2Values(m_myAgent));
-				processBehaviour.addSubBehaviour(new DetermineSingleValue(m_myAgent));
 				processBehaviour.addSubBehaviour(new RemoveFoundValues(m_myAgent));
+				processBehaviour.addSubBehaviour(new DetermineSingleValue(m_myAgent));
+				processBehaviour.addSubBehaviour(new NarrowDown2Values(m_myAgent));
 				processBehaviour.addSubBehaviour(new ReturnProcessResult(m_myAgent));
 				m_myAgent.addBehaviour(processBehaviour);
 			} else {
