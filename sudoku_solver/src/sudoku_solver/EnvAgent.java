@@ -16,12 +16,23 @@ public class EnvAgent extends Agent {
 	
 	public static enum Structure {LINE, COLUMN, SQUARE};
 	
-	public EnvAgent(String filename) throws FileNotFoundException, IOException {
-		super();
+	public EnvAgent() throws FileNotFoundException, IOException {
+		super();	    
+	}
+
+	@Override
+	protected void setup() {
+		
 		m_pcs = new PropertyChangeSupport(this);
 		
-		BufferedReader br = new BufferedReader(new FileReader("file.txt"));
+		//Get the arguments
+		String filename = (String) getArguments()[0];
+		
+		//Parser le fichier contenant le sudoku
+		BufferedReader br;
+		
 	    try {
+	    	br = new BufferedReader(new FileReader(filename));
 	        String line = br.readLine();
 	        int i = 0;
 	        
@@ -39,14 +50,15 @@ public class EnvAgent extends Agent {
 	        	e.printStackTrace();
 	        	System.out.println("Iteration " + i);
 	        }
-	    } finally {
-	        br.close();
+	        finally {
+	        	br.close();
+	        }
+	    } catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 	    }
-	    
-	}
-
-	@Override
-	protected void setup() {
+		
+		
 		addBehaviour(new EnvReceiveMessageBehaviour(this));		
 	}
 	

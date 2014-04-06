@@ -10,6 +10,7 @@ public class SudokuMain {
 	
 	public static String MAIN_PROPERTIES_FILE = "src/mainProperties";
 	public static String SECOND_PROPERTIES_FILE = "src/secondProperties";
+	public static String SUDOKU_FILE = "ressources/sudoku1";
 
 	public static void main(String[] args) {
 		Runtime rt = Runtime.instance();
@@ -18,7 +19,8 @@ public class SudokuMain {
 		try {
 			Profile p = new ProfileImpl(MAIN_PROPERTIES_FILE);
 			ContainerController envContainer = rt.createMainContainer(p);
-			AgentController envAgent = envContainer.createNewAgent("EnvAgent", EnvAgent.class.getName(), new Object[0]);
+			Object[] args1 = new Object[1]; args1[0] = SUDOKU_FILE;
+			AgentController envAgent = envContainer.createNewAgent("EnvAgent", EnvAgent.class.getName(), args1);
 			envAgent.start();
 		} catch (Exception e) {
 			e.printStackTrace();
