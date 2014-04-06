@@ -35,8 +35,9 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 			for (String name : result.keySet()) {
 				AID aid = new AID(name, AID.ISGUID);
 				ArrayList<Case> array = result.get(aid.getName());
-				System.out.println(aid.getName() + "'s array length = " + array.size());
-				// Si tu veux pas le "@...", utilise getLocalName au lieu de getName
+				System.out.println(aid.getLocalName() + "'s array length = " + array.size());
+				AID realId = processAIDandCases(aid, array);
+				myAgent.addBehaviour(new EnvSendRequestToAnalBehaviour(myAgent, realId, m_sudokuNewValuesMessage.getSender()));
 			}
 		}
 		catch (Exception ex) {
@@ -45,10 +46,11 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 	}
 
 
-	private void processAIDandCases(AID id, ArrayList<Case> value) {
+	private AID processAIDandCases(AID id, ArrayList<Case> value) {
 		
 		EnvAgent agent = (EnvAgent) myAgent;
 		EnvAgent.Structure type = agent.getTypeOfConnectionFromAnalyseId(id);
+		AID returnAID = agent.getRealAIDofConnectionFromAnalyseId(id);
 		int index = agent.getIndexOfConnectionFromAnalyseId(id);
 		Case[][] sudoku = agent.getSudoku();
 		
@@ -100,6 +102,7 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 			}
 		}
 		
+		return returnAID;
 		
 	}
 	

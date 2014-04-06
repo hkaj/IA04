@@ -127,6 +127,7 @@ public class EnvAgent extends Agent {
 	
 	public Structure getTypeOfConnectionFromAnalyseId (AID id){return connectionArray.get(id).getType();}
 	public int getIndexOfConnectionFromAnalyseId (AID id) {return connectionArray.get(id).getIndex();}
+	public AID getRealAIDofConnectionFromAnalyseId (AID id) {return connectionArray.get(id).getAnalyseId();}
 	
 	public ArrayList<Case> getListOfCasesFromAID(AID id){
 		/**
