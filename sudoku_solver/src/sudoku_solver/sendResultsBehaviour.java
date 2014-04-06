@@ -1,7 +1,13 @@
 package sudoku_solver;
 
+import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
+
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,11 +22,18 @@ public class sendResultsBehaviour extends OneShotBehaviour {
 		System.out.println("All the AnaAgents returned. Sending the result to EnvAgent.");
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 		message.addReceiver(m_myAgent.get_m_envAgent());
-		try {
-			ObjectMapper mapper = new ObjectMapper(); 
-			message.setContent(mapper.writeValueAsString(m_myAgent.get_m_result()));
+		
+		ObjectMapper writerMapper = new ObjectMapper();
+		try{
+			HashMap<String, Map<AID, ArrayList<Case>>> casesMap = new HashMap<String, Map<AID, ArrayList<Case>>>();
+			casesMap.put("cases", m_myAgent.get_m_result());
+			HashMap<String, Object> contentMap = new HashMap<String, Object>();
+			contentMap.put("content", casesMap);
+			StringWriter sw = new StringWriter();
+			writerMapper.writeValue(sw, contentMap);
+			message.setContent(sw.toString());
 			myAgent.send(message);
-		} catch(Exception e) {
+		}catch (Exception e){
 			e.printStackTrace();
 		}
 		m_myAgent.clear_m_result();

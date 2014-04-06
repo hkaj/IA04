@@ -53,7 +53,6 @@ public class EnvAgent extends Agent {
 	        	}
 	        }catch(Exception e){
 	        	e.printStackTrace();
-	        	System.out.println("Iteration i = " + i + " et j = " + j);
 	        }
 	        finally {
 	        	br.close();
@@ -141,14 +140,10 @@ public class EnvAgent extends Agent {
 			}
 			
 		} else{
-			
-			System.out.println("new");
-			
 			int starti = (index % 3) * 3, i = starti;
 			int startj = (index / 3) * 3, j = startj;
 			
 			while(j != startj + 3){
-				System.out.println("i :" + i + " et j : " + j);
 				newList.add(m_sudoku[i][j]);
 				
 				if ((i+1) % 3 == 0){

@@ -25,10 +25,10 @@ public class ResultHandleBehaviour extends OneShotBehaviour {
 		ArrayList<Case> resultPart = new ArrayList<Case>();
 		try {
 			JsonNode jrootNode = mapper.readValue(content, JsonNode.class);
-			resultPart = mapper.readValue(
-					jrootNode.path("content").path("cases").textValue(),
-					new TypeReference<List<Case>>(){}
-			);					
+			String json = jrootNode.path("content").path("cases").toString();
+			System.out.println("Content: " + content);
+			System.out.println("JSON: " + json);
+			resultPart = mapper.readValue(json, new TypeReference<ArrayList<Case>>(){});					
 			m_myAgent.put_m_result(m_order.getSender(), resultPart);
 			if (m_myAgent.get_m_result().size() == 27) {
 				m_myAgent.addBehaviour(new sendResultsBehaviour(m_myAgent));
