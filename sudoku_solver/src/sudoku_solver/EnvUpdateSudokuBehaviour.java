@@ -1,20 +1,18 @@
 package sudoku_solver;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 
@@ -30,28 +28,21 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 		
 		
 		try {
-			//System.out.println("ICI" + content);
 			JsonNode jrootNode = mapper.readValue(content, JsonNode.class);
-			JsonNode cases = jrootNode.path("content").path("cases");
-			for (Iterator<Entry<String, JsonNode>> it = cases.fields(); it.hasNext(); ){
-				Entry<String, JsonNode> mapElement = it.next();
-				System.out.println("\n\n\n" + mapElement.getKey());
-				ArrayList<Case> zoneCases = mapper.readValue(mapElement.getValue().toString(),new TypeReference<ArrayList<Case>>(){});
-				//AID agentId = mapper.readValue(mapElement.getKey(), new TypeReference<AID>(){});
-				Pattern pattern = Pattern.compile("agent-identifier\\p{Blank}*:name\\p{Blank}*(\\w*)\\p{Blank}*:addresses"); 
-				Matcher matcher = pattern.matcher(mapElement.getKey().toString());
-				AID agentId = new AID(matcher.group(1), false);
-				
-				processAIDandCases(agentId, zoneCases);
-		        myAgent.addBehaviour(new EnvSendRequestToAnalBehaviour(myAgent, agentId, m_sudokuNewValuesMessage.getSender()));
+			String json = jrootNode.path("content").path("cases").toString();
+			Map<AID, ArrayList<Case>> result = new HashMap<AID, ArrayList<Case>>();
+			result = mapper.readValue(json, new TypeReference<Map<AID, ArrayList<Case>>>(){});
+			for (AID a : result.keySet()) {
+				ArrayList<Case> array = result.get(a);
+				// ICI TU PEUX TRAVAILLER SUR LE TABLEAU DES CASES;
 			}
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
-	
-	
+
+
 	private void processAIDandCases(AID id, ArrayList<Case> value) {
 		
 		EnvAgent agent = (EnvAgent) myAgent;
