@@ -21,6 +21,7 @@ public class EnvAgent extends Agent {
 	public EnvAgent() throws FileNotFoundException, IOException {
 		super();
 		m_sudoku = new Case[9][9];
+		connectionArray = new HashMap<AID, EnvironnementAnalyseCorresp>();
 	}
 
 	@Override
@@ -211,10 +212,7 @@ public class EnvAgent extends Agent {
 	
 	private PropertyChangeSupport m_pcs;
 	
-	
-	
-	
-	
+
 	
 	
 	static class EnvironnementAnalyseCorresp {
