@@ -21,8 +21,10 @@ public class SimRecMsgBehaviour extends CyclicBehaviour {
 				// handle the analysis-agent responses
 				m_myAgent.addBehaviour(new ResultHandleBehaviour(m_myAgent, order));
 			} else if (order.getPerformative() == ACLMessage.CONFIRM) {
+				// End message
 				System.out.println("The sudoku is solved! This simulation is now over.");
 			} else {
+				// Unexpected message
 				System.out.println("SimulAgent received an unexpected message.");
 			}
 		}

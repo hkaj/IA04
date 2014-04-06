@@ -29,7 +29,7 @@ public class Case {
 	public void setValue(int m_value) {this.m_value = m_value;}
 	public ArrayList<Integer> getPossibilities() {return m_possibilities;}
 	public void setPossibilities(ArrayList<Integer> m_possibilities) {this.m_possibilities = m_possibilities;}
-	
+	public void RemovePossibility(int idx) {m_possibilities.remove(new Integer(idx));}
 	//Members
 	private int m_value;
 	private ArrayList<Integer> m_possibilities;

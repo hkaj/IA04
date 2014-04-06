@@ -1,13 +1,13 @@
 package sudoku_solver;
 
+import jade.core.Agent;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
-import jade.core.Agent;
 
 public class EnvAgent extends Agent {
 	

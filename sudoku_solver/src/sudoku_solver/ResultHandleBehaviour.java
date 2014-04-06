@@ -29,8 +29,8 @@ public class ResultHandleBehaviour extends OneShotBehaviour {
 					jrootNode.path("content").path("cases").textValue(),
 					new TypeReference<List<Case>>(){}
 			);					
-			m_myAgent.m_result.put(m_order.getSender(), resultPart);
-			if (m_myAgent.m_result.size() == 27) {
+			m_myAgent.put_m_result(m_order.getSender(), resultPart);
+			if (m_myAgent.get_m_result().size() == 27) {
 				m_myAgent.addBehaviour(new sendResultsBehaviour(m_myAgent));
 			}
 		} catch (Exception e) {

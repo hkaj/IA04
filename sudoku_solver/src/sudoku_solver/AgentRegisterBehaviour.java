@@ -22,7 +22,7 @@ public class AgentRegisterBehaviour extends OneShotBehaviour {
 		try {
 			JsonNode jrootNode = mapper.readValue(content, JsonNode.class);
 			AID agentAID = new AID(jrootNode.path("content").path("AID").path(0).textValue(), true);
-			m_myAgent.m_anaAgents.add(agentAID);
+			m_myAgent.add_m_anaAgents(agentAID);
 			informEnv(agentAID);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -36,7 +36,7 @@ public class AgentRegisterBehaviour extends OneShotBehaviour {
 	private void informEnv(AID aid) {
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM_REF);
 		message.addReplyTo(aid);
-		message.addReceiver(m_myAgent.m_envAgent);
+		message.addReceiver(m_myAgent.get_m_envAgent());
 		myAgent.send(message);
 	}
 
