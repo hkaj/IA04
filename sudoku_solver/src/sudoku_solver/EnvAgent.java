@@ -17,7 +17,8 @@ public class EnvAgent extends Agent {
 	public static enum Structure {LINE, COLUMN, SQUARE};
 	
 	public EnvAgent() throws FileNotFoundException, IOException {
-		super();	    
+		super();
+		m_sudoku = new Case[9][9];
 	}
 
 	@Override
@@ -34,13 +35,14 @@ public class EnvAgent extends Agent {
 	    try {
 	    	br = new BufferedReader(new FileReader(filename));
 	        String line = br.readLine();
-	        int i = 0;
+	        int i = 0, j = 0;
 	        
 	        try{
-	        	while (line != null && i < 10) {
-	        	
-		        	for (int j = 0; j < 10; j++){
-		        		m_sudoku[i][j] = new Case(Character.getNumericValue(line.charAt(j)));
+	        	while (line != null && i < 9) {
+	        		
+		        	for (j = 0; j < 9; j++){
+		        		int value = Character.getNumericValue(line.charAt(j));
+		        		m_sudoku[i][j] = new Case(value);
 		        	}
 		   
 		            line = br.readLine();
@@ -48,7 +50,7 @@ public class EnvAgent extends Agent {
 	        	}
 	        }catch(Exception e){
 	        	e.printStackTrace();
-	        	System.out.println("Iteration " + i);
+	        	System.out.println("Iteration i = " + i + " et j = " + j);
 	        }
 	        finally {
 	        	br.close();
