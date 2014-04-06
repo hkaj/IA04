@@ -72,27 +72,36 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 			//La zone de l'agent était une ligne
 			int i = 0;
 			for(Iterator<Case> it = value.iterator(); it.hasNext(); i++){
-				sudoku[index][i].setPossibilities(intersectionBetweenCasePossibilityList(sudoku[index][i].getPossibilities(), it.next().getPossibilities()));
+				Case current = it.next();
+				sudoku[index][i].setPossibilities(intersectionBetweenCasePossibilityList(sudoku[index][i].getPossibilities(), current.getPossibilities()));
+				if (current.getValue() != 0 && sudoku[index][i].getValue() == 0)
+					sudoku[index][i].setValue(current.getValue());
 				
 				if (sudoku[index][i].getPossibilities().size() == 1){
 					sudoku[index][i].setValue(sudoku[index][i].getPossibilities().get(0));
 					sudoku[index][i].getPossibilities().clear();
-					agent.firePropertyChange("Case_changed", null, new int[] {index, i, sudoku[index][i].getValue()});
 				}
+				
+				agent.firePropertyChange("Case_changed", null, new int[] {index, i, sudoku[index][i].getValue()});
 				
 			}
 		} else if (type == EnvAgent.Structure.COLUMN){
 			//La zone de l'agent était une colonne
 			int i = 0;
 			for(Iterator<Case> it = value.iterator(); it.hasNext(); i++){
-				sudoku[i][index].setPossibilities(intersectionBetweenCasePossibilityList(sudoku[i][index].getPossibilities(), it.next().getPossibilities()));
+				
+				Case current = it.next();
+				sudoku[i][index].setPossibilities(intersectionBetweenCasePossibilityList(sudoku[i][index].getPossibilities(), current.getPossibilities()));
+				if (current.getValue() != 0 && sudoku[i][index].getValue() == 0)
+					sudoku[i][index].setValue(current.getValue());
 			
 			
 				if (sudoku[i][index].getPossibilities().size() == 1){
 					sudoku[i][index].setValue(sudoku[i][index].getPossibilities().get(0));
 					sudoku[i][index].getPossibilities().clear();
-					agent.firePropertyChange("Case_changed", null, new int[] {i, index, sudoku[i][index].getValue()});
 				}
+				
+				agent.firePropertyChange("Case_changed", null, new int[] {i, index, sudoku[i][index].getValue()});
 			}
 			
 		} else{
@@ -100,13 +109,19 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 			int starti = (index / 3) * 3, i = starti;
 			int startj = (index % 3) * 3, j = startj;
 			for(Iterator<Case> it = value.iterator(); it.hasNext();){
-				sudoku[i][j].setPossibilities(intersectionBetweenCasePossibilityList(sudoku[i][j].getPossibilities(), it.next().getPossibilities()));
+				Case current = it.next();
+				
+				sudoku[i][j].setPossibilities(intersectionBetweenCasePossibilityList(sudoku[i][j].getPossibilities(), current.getPossibilities()));
+				if (current.getValue() != 0 && sudoku[i][j].getValue() == 0)
+					sudoku[i][j].setValue(current.getValue());
+				
 				
 				if (sudoku[i][j].getPossibilities().size() == 1){
 					sudoku[i][j].setValue(sudoku[i][j].getPossibilities().get(0));
 					sudoku[i][j].getPossibilities().clear();
-					agent.firePropertyChange("Case_changed", null, new int[] {i, j, sudoku[i][j].getValue()});
 				}
+				
+				agent.firePropertyChange("Case_changed", null, new int[] {i, j, sudoku[i][j].getValue()});
 				
 				/*if (index == 3)
 					System.out.println("i = " + i + "j = " + j);*/
