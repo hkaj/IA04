@@ -27,8 +27,9 @@ public class EnvSendRequestToAnalBehaviour extends OneShotBehaviour {
 		
 		//On vérifie d'abord que la zone dont doit s'occuper l'AnaAgent n'est pas déjà résolue
 		EnvAgent agent = (EnvAgent) myAgent;
-		if (!agent.isZoneResolved(m_receiver)){
+		//if (!agent.isZoneResolved(m_receiver)){
 		//if (true){
+		if (!agent.isSudokuSolved()){
 			ArrayList<Case> zoneCases = agent.getListOfCasesFromAID(m_receiver);
 			
 			//DEBUG
@@ -63,13 +64,13 @@ public class EnvSendRequestToAnalBehaviour extends OneShotBehaviour {
 			//System.out.println("Message sent");
 			//System.out.println(m_receiver);
 			
-		} else if (agent.isSudokuSolved()){
+		} else {
 			ACLMessage sudokuSolvedMessage = new ACLMessage(ACLMessage.CONFIRM);
 			sudokuSolvedMessage.addReceiver(m_simul);
 			myAgent.send(sudokuSolvedMessage);
-		} else {
+		}/* else {
 			System.out.println("Zone résolue, pas de message envoyé");
-		}
+		}*/
 
 	}
 	
