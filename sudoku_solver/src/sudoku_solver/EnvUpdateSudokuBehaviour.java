@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -28,13 +30,21 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 		
 		
 		try {
+			//System.out.println("ICI" + content);
 			JsonNode jrootNode = mapper.readValue(content, JsonNode.class);
-			HashMap<AID,ArrayList<Case>> ensembleCases = mapper.readValue(jrootNode.path("content").textValue(), new TypeReference<HashMap<AID,ArrayList<Case>>>(){});
-			for(Iterator<Entry<AID,ArrayList<Case>>> it = ensembleCases.entrySet().iterator(); it.hasNext();){
-				Entry<AID, ArrayList<Case>> pairs = (Entry<AID, ArrayList<Case>>)it.next();
-		        processAIDandCases((AID) pairs.getKey(), (ArrayList<Case>) pairs.getValue());
-		        myAgent.addBehaviour(new EnvSendRequestToAnalBehaviour(myAgent, (AID) pairs.getKey(), m_sudokuNewValuesMessage.getSender()));
-		    }
+			JsonNode cases = jrootNode.path("content").path("cases");
+			for (Iterator<Entry<String, JsonNode>> it = cases.fields(); it.hasNext(); ){
+				Entry<String, JsonNode> mapElement = it.next();
+				System.out.println("\n\n\n" + mapElement.getKey());
+				ArrayList<Case> zoneCases = mapper.readValue(mapElement.getValue().toString(),new TypeReference<ArrayList<Case>>(){});
+				//AID agentId = mapper.readValue(mapElement.getKey(), new TypeReference<AID>(){});
+				Pattern pattern = Pattern.compile("agent-identifier\\p{Blank}*:name\\p{Blank}*(\\w*)\\p{Blank}*:addresses"); 
+				Matcher matcher = pattern.matcher(mapElement.getKey().toString());
+				AID agentId = new AID(matcher.group(1), false);
+				
+				processAIDandCases(agentId, zoneCases);
+		        myAgent.addBehaviour(new EnvSendRequestToAnalBehaviour(myAgent, agentId, m_sudokuNewValuesMessage.getSender()));
+			}
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
