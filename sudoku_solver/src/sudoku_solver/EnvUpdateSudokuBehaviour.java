@@ -50,6 +50,7 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 		Case[][] sudoku = agent.getSudoku();
 		
 		if (type == EnvAgent.Structure.LINE){
+			//La zone de l'agent était une ligne
 			int i = 0;
 			for(Iterator<Case> it = value.iterator(); it.hasNext(); i++){
 				sudoku[index][i].setPossibilities(intersectionBetweenCasePossibilityList(sudoku[index][i].getPossibilities(), it.next().getPossibilities()));
@@ -61,6 +62,7 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 				
 			}
 		} else if (type == EnvAgent.Structure.COLUMN){
+			//La zone de l'agent était une colonne
 			int i = 0;
 			for(Iterator<Case> it = value.iterator(); it.hasNext(); i++){
 				sudoku[i][index].setPossibilities(intersectionBetweenCasePossibilityList(sudoku[i][index].getPossibilities(), it.next().getPossibilities()));
@@ -73,8 +75,9 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 			}
 			
 		} else{
+			//La zone de l'agent était un carré
 			int starti = (index % 3) * 3, i = starti;
-			int j = index;
+			int j = (index / 3) * 3;
 			for(Iterator<Case> it = value.iterator(); it.hasNext();){
 				sudoku[i][j].setPossibilities(intersectionBetweenCasePossibilityList(sudoku[i][j].getPossibilities(), it.next().getPossibilities()));
 				
