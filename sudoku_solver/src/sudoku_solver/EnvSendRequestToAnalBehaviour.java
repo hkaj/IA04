@@ -3,6 +3,7 @@ package sudoku_solver;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,8 +28,21 @@ public class EnvSendRequestToAnalBehaviour extends OneShotBehaviour {
 		//On vérifie d'abord que la zone dont doit s'occuper l'AnaAgent n'est pas déjà résolue
 		EnvAgent agent = (EnvAgent) myAgent;
 		if (!agent.isZoneResolved(m_receiver)){
+		//if (true){
 			ArrayList<Case> zoneCases = agent.getListOfCasesFromAID(m_receiver);
 			
+			//DEBUG
+			if (agent.getIndexOfConnectionFromAnalyseId(m_receiver) == 5 && agent.getTypeOfConnectionFromAnalyseId(m_receiver) == EnvAgent.Structure.LINE){
+				System.out.println("TO BE SENT");
+				for (Iterator<Case> it = zoneCases.iterator(); it.hasNext();){
+					Case nex = it.next();
+					System.out.println("Value : " + nex.getValue());
+					for (Iterator<Integer> it2 = nex.getPossibilities().iterator(); it2.hasNext();){
+						System.out.println(it2.next());
+					}
+				}
+			}
+			//DEBUG
 			
 			ObjectMapper writerMapper = new ObjectMapper();
 			try{
@@ -43,10 +57,13 @@ public class EnvSendRequestToAnalBehaviour extends OneShotBehaviour {
 				e.printStackTrace();
 			}
 			
+			//System.out.println(order.getContent());
 			
 			myAgent.send(order);
+			//System.out.println("Message sent");
+			//System.out.println(m_receiver);
 			
-		}else if (agent.isSudokuSolved()){
+		} else if (agent.isSudokuSolved()){
 			ACLMessage sudokuSolvedMessage = new ACLMessage(ACLMessage.CONFIRM);
 			sudokuSolvedMessage.addReceiver(m_simul);
 			myAgent.send(sudokuSolvedMessage);

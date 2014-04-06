@@ -35,6 +35,20 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 			for (String name : result.keySet()) {
 				AID aid = new AID(name, AID.ISGUID);
 				ArrayList<Case> array = result.get(aid.getName());
+				
+				//DEBUG
+				/*EnvAgent agent = (EnvAgent) myAgent;
+				if (agent.getIndexOfConnectionFromAnalyseId(aid) == 5 && agent.getTypeOfConnectionFromAnalyseId(aid) == EnvAgent.Structure.LINE){
+					for (Iterator<Case> it = array.iterator(); it.hasNext();){
+						Case nex = it.next();
+						System.out.println("Value : " + nex.getValue());
+						for (Iterator<Integer> it2 = nex.getPossibilities().iterator(); it2.hasNext();){
+							System.out.println(it2.next());
+						}
+					}
+				}*/
+				//DEBUG
+				
 				System.out.println(aid.getLocalName() + "'s array length = " + array.size());
 				AID realId = processAIDandCases(aid, array);
 				myAgent.addBehaviour(new EnvSendRequestToAnalBehaviour(myAgent, realId, m_sudokuNewValuesMessage.getSender()));
@@ -83,8 +97,8 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 			
 		} else{
 			//La zone de l'agent était un carré
-			int starti = (index % 3) * 3, i = starti;
-			int j = (index / 3) * 3;
+			int starti = (index / 3) * 3, i = starti;
+			int startj = (index % 3) * 3, j = startj;
 			for(Iterator<Case> it = value.iterator(); it.hasNext();){
 				sudoku[i][j].setPossibilities(intersectionBetweenCasePossibilityList(sudoku[i][j].getPossibilities(), it.next().getPossibilities()));
 				
@@ -94,11 +108,14 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 					agent.firePropertyChange("Case_changed", null, new int[] {i, j, sudoku[i][j].getValue()});
 				}
 				
-				if ((i+1) % 3 == 0){
-					j++; i = starti;
+				/*if (index == 3)
+					System.out.println("i = " + i + "j = " + j);*/
+				
+				if ((j+1) % 3 == 0){
+					i++; j = startj;
 				}
 				else
-					i++;
+					j++;
 			}
 		}
 		

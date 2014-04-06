@@ -157,22 +157,25 @@ public class EnvAgent extends Agent {
 			//La zone est un carré
 			
 			//On prend pour point de départ la case en haut à gauche du carré
-			//Ainsi pour le carré numéro 4 (central du sudoku) :
-			//i = (4 % 3) * 3 = 1 * 3 = 3
-			//j = (4 / 3) * 3 = 1 * 3 = 3
-			int starti = (index % 3) * 3, i = starti;
-			int startj = (index / 3) * 3, j = startj;
+			//Ainsi pour le carré numéro 3 (centre gauche du sudoku) :
+			//i = (3 / 3) * 3 = 1 * 3 = 3
+			//j = (3 % 3) * 3 = 0 * 3 = 0
+			int starti = (index / 3) * 3, i = starti;
+			int startj = (index % 3) * 3, j = startj;
 			
-			while(j != startj + 3){
+			while(i != starti + 3){
 				newList.add(m_sudoku[i][j]);
 				
-				if ((i+1) % 3 == 0){
+				/*if (index == 3)
+					System.out.println("i = " + i + "j = " + j);*/
+				
+				if ((j+1) % 3 == 0){
 					//Si on a visité trois cases on passe à la colonne suivante
-					j++; i = starti;
+					i++; j = startj;
 				}
 				else
 					//Sinon on passe à la ligne suivante pour une même colonne
-					i++;
+					j++;
 			}
 			
 		}
@@ -198,17 +201,17 @@ public class EnvAgent extends Agent {
 			}
 			
 		} else{
-			int starti = (index % 3) * 3, i = starti;
-			int startj = index, j = startj;
-			while(j != startj + 3){
+			int starti = (index / 3) * 3, i = starti;
+			int startj = (index % 3) * 3, j = startj;
+			while(i != starti + 3){
 				if (m_sudoku[i][j].getValue() == 0)
 					return false;
 				
-				if ((i+1) % 3 == 0){
-					j++; i = starti;
+				if ((j+1) % 3 == 0){
+					i++; j = startj;
 				}
 				else
-					i++;
+					j++;
 			}
 		}
 		
