@@ -95,6 +95,12 @@ public class EnvAgent extends Agent {
 	
 	//Getters & Setters
 	public Case[][] getSudoku() {return m_sudoku;}
+	public int getCaseValue(int lig, int col) {
+		if (lig < 9 && col < 9)
+			return m_sudoku[lig][col].getValue();
+		else
+			return -1;
+	}
 	@SuppressWarnings("unused")
 	private void setSudoku(Case[][] m_sudoku) {this.m_sudoku = m_sudoku;}
 	
@@ -123,23 +129,36 @@ public class EnvAgent extends Agent {
 	public int getIndexOfConnectionFromAnalyseId (AID id) {return connectionArray.get(id).getIndex();}
 	
 	public ArrayList<Case> getListOfCasesFromAID(AID id){
+		/**
+		 * @brief Construit la liste des cases pour un agent d'analyse donné
+		 */
+		
+		
+		//L'index est le numéro de ligne, colonne ou carré
+		//Le type peut être ligne, colonne ou carré
 		Structure type = connectionArray.get(id).getType();
 		int index = connectionArray.get(id).getIndex();
 		ArrayList<Case> newList = new ArrayList<>(9);
 		
 		if (type == EnvAgent.Structure.LINE){
-			
+			//La zone est une ligne
 			for(int i = 0; i < 9; i++){
 				newList.add(m_sudoku[index][i]);
 			}
 			
 		} else if (type == EnvAgent.Structure.COLUMN){
-			
+			//La zone est une colonne
 			for(int i = 0; i < 9; i++){
 				newList.add(m_sudoku[i][index]);
 			}
 			
 		} else{
+			//La zone est un carré
+			
+			//On prend pour point de départ la case en haut à gauche du carré
+			//Ainsi pour le carré numéro 4 (central du sudoku) :
+			//i = (4 % 3) * 3 = 1 * 3 = 3
+			//j = (4 / 3) * 3 = 1 * 3 = 3
 			int starti = (index % 3) * 3, i = starti;
 			int startj = (index / 3) * 3, j = startj;
 			
@@ -147,9 +166,11 @@ public class EnvAgent extends Agent {
 				newList.add(m_sudoku[i][j]);
 				
 				if ((i+1) % 3 == 0){
+					//Si on a visité trois cases on passe à la colonne suivante
 					j++; i = starti;
 				}
 				else
+					//Sinon on passe à la ligne suivante pour une même colonne
 					i++;
 			}
 			

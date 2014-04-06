@@ -59,7 +59,16 @@ public class SudokuWindow extends JFrame implements PropertyChangeListener {
 		m_sudokuArrayLabels = new JLabel[sizeOfSudoku][sizeOfSudoku];
 		for (int lig = 0; lig < sizeOfSudoku; ++lig)
 			for (int col = 0; col < sizeOfSudoku; ++col){
-				m_sudokuArrayLabels[lig][col] = new JLabel("0", SwingConstants.CENTER);
+				if (m_agent != null){
+					int value = m_agent.getCaseValue(lig, col);
+					m_sudokuArrayLabels[lig][col] = new JLabel(Integer.toString(value), SwingConstants.CENTER);
+					if (value == 0)
+						m_sudokuArrayLabels[lig][col].setForeground(Color.red);
+					else
+						m_sudokuArrayLabels[lig][col].setForeground(Color.black);
+				}
+				else
+					m_sudokuArrayLabels[lig][col] = new JLabel("0", SwingConstants.CENTER);
 				setLabelBorderColor(lig, col);
 				m_centerPanel.add(m_sudokuArrayLabels[lig][col]);
 			}
@@ -94,13 +103,13 @@ public class SudokuWindow extends JFrame implements PropertyChangeListener {
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName() == "Sudoku_changed"){
-			Case[][] sudoku = (Case[][]) evt.getNewValue();
-			for(int i = 0; i < sizeOfSudoku; ++i){
-				for (int j = 0; j < sizeOfSudoku; ++j){
-					m_sudokuArrayLabels[i][j].setText(Integer.toString(sudoku[i][j].getValue()));
-				}
-			}
+		if (evt.getPropertyName() == "Case_changed"){
+			int[] args = (int[]) evt.getNewValue();
+			int lig = (int) args[0];
+			int col = (int) args[1];
+			int value = (int) args[2];
+			m_sudokuArrayLabels[lig][col].setText(Integer.toString(value));
+			m_sudokuArrayLabels[lig][col].setForeground(Color.black);
 		}
 	}
 	
