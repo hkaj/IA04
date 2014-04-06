@@ -4,9 +4,6 @@ import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class AgentRegisterBehaviour extends OneShotBehaviour {
 
 	public AgentRegisterBehaviour(SimulAgent a, ACLMessage order) {
@@ -17,16 +14,10 @@ public class AgentRegisterBehaviour extends OneShotBehaviour {
 	
 	@Override
 	public void action() {
-		String content = m_order.getContent();
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			JsonNode jrootNode = mapper.readValue(content, JsonNode.class);
-			AID agentAID = new AID(jrootNode.path("content").path("AID").path(0).textValue(), true);
-			m_myAgent.add_m_anaAgents(agentAID);
-			informEnv(agentAID);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		AID agentAID = m_order.getSender();
+//		System.out.println("SIMULATION AGENT -> Le nouvel AnaAgent est : " + agentAID);
+		m_myAgent.add_m_anaAgents(agentAID);
+		informEnv(agentAID);
 	}
 	
 	// Members

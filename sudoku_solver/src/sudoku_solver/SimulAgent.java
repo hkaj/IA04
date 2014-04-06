@@ -4,13 +4,16 @@ import jade.core.AID;
 import jade.core.Agent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class SimulAgent extends Agent {
 	
 	public SimulAgent() {
 		super();
-		this.m_envAgent = new AID("EnvAgent", true);
+		this.m_envAgent = new AID("EnvAgent", AID.ISLOCALNAME);
+		this.m_anaAgents = new ArrayList<AID>();
+		this.m_result = new HashMap<AID, ArrayList<Case>>();
 	}
 	@Override
 	protected void setup() {

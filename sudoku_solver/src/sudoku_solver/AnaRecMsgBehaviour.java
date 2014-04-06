@@ -39,6 +39,7 @@ public class AnaRecMsgBehaviour extends CyclicBehaviour {
 				m_myAgent.addBehaviour(new ProcessRequestBehaviour(m_myAgent));
 			} else {
 				System.out.println("AnaAgent received an unexpected message.");
+				System.out.println("Agent " + order.getSender() + "sent a " + order.getPerformative() + ": " + order.getContent());
 			}
 		}
 	}

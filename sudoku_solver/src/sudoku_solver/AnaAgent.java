@@ -10,7 +10,7 @@ public class AnaAgent extends Agent {
 	public AnaAgent() {
 		super();
 		this.m_array = new ArrayList<Case>(9);
-		this.m_simulAgent = new AID("SimulAgent", true);
+		this.m_simulAgent = new AID("SimAgent", AID.ISLOCALNAME);
 	}
 
 	@Override
