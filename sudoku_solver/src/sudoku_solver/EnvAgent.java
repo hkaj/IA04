@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import view.SudokuWindow;
+
 public class EnvAgent extends Agent {
 	
 	public static enum Structure {LINE, COLUMN, SQUARE};
@@ -60,6 +62,9 @@ public class EnvAgent extends Agent {
 			e1.printStackTrace();
 	    }
 		
+	    
+	    //Create the window
+	    m_sudokuWindow = new SudokuWindow(this);
 		
 		addBehaviour(new EnvReceiveMessageBehaviour(this));		
 	}
@@ -202,6 +207,7 @@ public class EnvAgent extends Agent {
 	//Members
 	private Case m_sudoku[][];
 	private HashMap<AID, EnvironnementAnalyseCorresp> connectionArray;
+	private SudokuWindow m_sudokuWindow;
 	
 	private PropertyChangeSupport m_pcs;
 	
