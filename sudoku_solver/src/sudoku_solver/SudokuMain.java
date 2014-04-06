@@ -49,7 +49,5 @@ public class SudokuMain {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }

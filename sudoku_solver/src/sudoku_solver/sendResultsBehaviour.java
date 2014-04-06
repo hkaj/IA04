@@ -1,6 +1,5 @@
 package sudoku_solver;
 
-import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -36,10 +35,10 @@ public class sendResultsBehaviour extends OneShotBehaviour {
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+		// clear the result, so the next iteration doesn't have it
 		m_myAgent.clear_m_result();
 	}
 	
 	// Members
 	private SimulAgent m_myAgent; 
-
 }

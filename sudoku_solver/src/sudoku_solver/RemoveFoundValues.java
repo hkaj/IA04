@@ -2,7 +2,6 @@ package sudoku_solver;
 
 import jade.core.behaviours.OneShotBehaviour;
 
-import java.io.Console;
 import java.util.ArrayList;
 
 public class RemoveFoundValues extends OneShotBehaviour {
@@ -14,7 +13,6 @@ public class RemoveFoundValues extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-//		System.out.println("Removing found values from possibilities");
 		int value = 0;
 		ArrayList<Case> array = m_myAgent.get_m_array();
 		for (Case c1 : array) {
@@ -30,5 +28,4 @@ public class RemoveFoundValues extends OneShotBehaviour {
 
 	// Members
 		private AnaAgent m_myAgent;
-
 }

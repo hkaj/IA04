@@ -4,7 +4,6 @@ import jade.core.AID;
 import jade.core.Agent;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AnaAgent extends Agent {
 	

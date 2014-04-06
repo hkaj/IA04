@@ -1,11 +1,9 @@
 package sudoku_solver;
 
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.SequentialBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,7 +21,7 @@ public class AnaRecMsgBehaviour extends CyclicBehaviour {
 		ACLMessage order = myAgent.receive();
 		if (order != null) {
 			if (order.getPerformative() == ACLMessage.REQUEST) {
-				// process the request
+				// Map the cases to an ArrayList in m_myAgent.m_array
 				String content = order.getContent();
 				ObjectMapper mapper = new ObjectMapper();
 				ArrayList<Case> array = new ArrayList<Case>();
@@ -32,14 +30,10 @@ public class AnaRecMsgBehaviour extends CyclicBehaviour {
 					String json = jrootNode.path("content").path("cases").toString();
 					array = mapper.readValue(json, new TypeReference<ArrayList<Case>>(){});
 					m_myAgent.set_m_array(array);
-//					System.out.println("LIGNE RECUE");
-//					for (Case c : array) {
-//						System.out.println("VALUE : "+c.getValue());
-//						System.out.println("POS : "+c.getPossibilities());
-//					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				// Launch the array processing
 				ProcessRequestBehaviour processBehaviour = new ProcessRequestBehaviour(m_myAgent);
 				processBehaviour.addSubBehaviour(new RemoveFoundValues(m_myAgent));
 				processBehaviour.addSubBehaviour(new DetermineSingleValue(m_myAgent));
@@ -55,5 +49,4 @@ public class AnaRecMsgBehaviour extends CyclicBehaviour {
 	
 	// Members
 	private AnaAgent m_myAgent;
-
 }

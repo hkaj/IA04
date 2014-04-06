@@ -49,7 +49,6 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 				}*/
 				//DEBUG
 				
-				System.out.println(aid.getLocalName() + "'s array length = " + array.size());
 				AID realId = processAIDandCases(aid, array);
 				myAgent.addBehaviour(new EnvSendRequestToAnalBehaviour(myAgent, realId, m_sudokuNewValuesMessage.getSender()));
 			}

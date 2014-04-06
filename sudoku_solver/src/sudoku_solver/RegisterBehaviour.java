@@ -20,5 +20,4 @@ public class RegisterBehaviour extends OneShotBehaviour {
 
 	// Members
 	private AnaAgent m_myAgent;
-
 }

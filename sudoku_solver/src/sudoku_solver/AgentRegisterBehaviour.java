@@ -15,7 +15,6 @@ public class AgentRegisterBehaviour extends OneShotBehaviour {
 	@Override
 	public void action() {
 		AID agentAID = m_order.getSender();
-//		System.out.println("SIMULATION AGENT -> Le nouvel AnaAgent est : " + agentAID);
 		m_myAgent.add_m_anaAgents(agentAID);
 		informEnv(agentAID);
 	}

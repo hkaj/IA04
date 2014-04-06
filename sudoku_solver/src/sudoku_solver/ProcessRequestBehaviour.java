@@ -11,5 +11,4 @@ public class ProcessRequestBehaviour extends SequentialBehaviour {
 	
 	// Members
 	private AnaAgent m_myAgent;
-
 }

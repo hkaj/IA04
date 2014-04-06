@@ -18,6 +18,7 @@ public class ReturnProcessResult extends OneShotBehaviour {
 
 	@Override
 	public void action() {
+		// Send the result of the resolution to the SimAgent.
 		ACLMessage response = new ACLMessage(ACLMessage.INFORM);
 		response.addReceiver(m_myAgent.get_m_simulAgent());
 		ArrayList<Case> result = m_myAgent.get_m_array();
@@ -39,5 +40,4 @@ public class ReturnProcessResult extends OneShotBehaviour {
 
 	// Members
 	private AnaAgent m_myAgent;
-
 }
