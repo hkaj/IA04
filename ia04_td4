@@ -41,6 +41,7 @@ CONTENU DES MESSAGES :
 {
 	"content" : 
 	{
+
 		"cases" : [Case1, ..., Case9]	//ArrayList
 	}
 }
