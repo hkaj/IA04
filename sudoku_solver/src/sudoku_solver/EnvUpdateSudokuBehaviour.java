@@ -30,11 +30,13 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 		try {
 			JsonNode jrootNode = mapper.readValue(content, JsonNode.class);
 			String json = jrootNode.path("content").path("cases").toString();
-			Map<AID, ArrayList<Case>> result = new HashMap<AID, ArrayList<Case>>();
-			result = mapper.readValue(json, new TypeReference<Map<AID, ArrayList<Case>>>(){});
-			for (AID a : result.keySet()) {
-				ArrayList<Case> array = result.get(a);
-				// ICI TU PEUX TRAVAILLER SUR LE TABLEAU DES CASES;
+			Map<String, ArrayList<Case>> result = new HashMap<String, ArrayList<Case>>();
+			result = mapper.readValue(json, new TypeReference<Map<String, ArrayList<Case>>>(){});
+			for (String name : result.keySet()) {
+				AID aid = new AID(name, AID.ISGUID);
+				ArrayList<Case> array = result.get(aid.getName());
+				System.out.println(aid.getName() + "'s array length = " + array.size());
+				// Si tu veux pas le "@...", utilise getLocalName au lieu de getName
 			}
 		}
 		catch (Exception ex) {

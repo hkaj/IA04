@@ -25,7 +25,7 @@ public class sendResultsBehaviour extends OneShotBehaviour {
 		
 		ObjectMapper writerMapper = new ObjectMapper();
 		try{
-			HashMap<String, Map<AID, ArrayList<Case>>> casesMap = new HashMap<String, Map<AID, ArrayList<Case>>>();
+			HashMap<String, Map<String, ArrayList<Case>>> casesMap = new HashMap<String, Map<String, ArrayList<Case>>>();
 			casesMap.put("cases", m_myAgent.get_m_result());
 			HashMap<String, Object> contentMap = new HashMap<String, Object>();
 			contentMap.put("content", casesMap);

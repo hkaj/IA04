@@ -13,7 +13,7 @@ public class SimulAgent extends Agent {
 		super();
 		this.m_envAgent = new AID("EnvAgent", AID.ISLOCALNAME);
 		this.m_anaAgents = new ArrayList<AID>();
-		this.m_result = new HashMap<AID, ArrayList<Case>>();
+		this.m_result = new HashMap<String, ArrayList<Case>>();
 	}
 	@Override
 	protected void setup() {
@@ -24,7 +24,7 @@ public class SimulAgent extends Agent {
 	// Members
 	private ArrayList<AID> m_anaAgents;
 	private AID m_envAgent;
-	private Map<AID, ArrayList<Case>> m_result;
+	private Map<String, ArrayList<Case>> m_result;
 	
 	public ArrayList<AID> get_m_anaAgents() {
 		return m_anaAgents;
@@ -38,11 +38,11 @@ public class SimulAgent extends Agent {
 	public void set_m_envAgent(AID m_envAgent) {
 		this.m_envAgent = m_envAgent;
 	}
-	public Map<AID, ArrayList<Case>> get_m_result() {
+	public Map<String, ArrayList<Case>> get_m_result() {
 		return m_result;
 	}
 	public void put_m_result(AID aid, ArrayList<Case> list) {
-		this.m_result.put(aid, list);
+		this.m_result.put(aid.getName(), list);
 	}
 	public void clear_m_result() {
 		this.m_result.clear();
