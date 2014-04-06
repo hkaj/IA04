@@ -58,6 +58,7 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 				if (sudoku[index][i].getPossibilities().size() == 1){
 					sudoku[index][i].setValue(sudoku[index][i].getPossibilities().get(0));
 					sudoku[index][i].getPossibilities().clear();
+					agent.firePropertyChange("Case_changed", null, new int[] {index, i, sudoku[index][i].getValue()});
 				}
 				
 			}
@@ -71,6 +72,7 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 				if (sudoku[i][index].getPossibilities().size() == 1){
 					sudoku[i][index].setValue(sudoku[i][index].getPossibilities().get(0));
 					sudoku[i][index].getPossibilities().clear();
+					agent.firePropertyChange("Case_changed", null, new int[] {i, index, sudoku[i][index].getValue()});
 				}
 			}
 			
@@ -84,6 +86,7 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 				if (sudoku[i][j].getPossibilities().size() == 1){
 					sudoku[i][j].setValue(sudoku[i][j].getPossibilities().get(0));
 					sudoku[i][j].getPossibilities().clear();
+					agent.firePropertyChange("Case_changed", null, new int[] {i, j, sudoku[i][j].getValue()});
 				}
 				
 				if ((i+1) % 3 == 0){
@@ -93,9 +96,6 @@ public class EnvUpdateSudokuBehaviour extends OneShotBehaviour {
 					i++;
 			}
 		}
-		
-		//On notifie la vue
-		agent.firePropertyChange("Sudoku_changed", null, sudoku);
 		
 		
 	}

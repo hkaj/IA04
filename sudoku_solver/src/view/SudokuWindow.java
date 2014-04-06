@@ -97,13 +97,12 @@ public class SudokuWindow extends JFrame implements PropertyChangeListener {
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName() == "Sudoku_changed"){
-			Case[][] sudoku = (Case[][]) evt.getNewValue();
-			for(int i = 0; i < sizeOfSudoku; ++i){
-				for (int j = 0; j < sizeOfSudoku; ++j){
-					m_sudokuArrayLabels[i][j].setText(Integer.toString(sudoku[i][j].getValue()));
-				}
-			}
+		if (evt.getPropertyName() == "Case_changed"){
+			int[] args = (int[]) evt.getNewValue();
+			int lig = (int) args[0];
+			int col = (int) args[1];
+			int value = (int) args[2];
+			m_sudokuArrayLabels[lig][col].setText(Integer.toString(value));
 		}
 	}
 	
