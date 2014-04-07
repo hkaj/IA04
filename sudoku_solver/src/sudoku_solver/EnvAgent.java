@@ -16,7 +16,8 @@ import view.SudokuWindow;
 
 public class EnvAgent extends Agent {
 	
-	public static enum Structure {LINE, COLUMN, SQUARE};
+	//Enumération pour définir le type de zone du sudoku
+	public static enum Zone {LINE, COLUMN, SQUARE};
 	
 	public EnvAgent() throws FileNotFoundException, IOException {
 		super();
@@ -29,7 +30,7 @@ public class EnvAgent extends Agent {
 		
 		m_pcs = new PropertyChangeSupport(this);
 		
-		//Get the arguments
+		//Get the arguments of Agent
 		String filename = (String) getArguments()[0];
 		
 		//Parser le fichier contenant le sudoku
@@ -58,7 +59,6 @@ public class EnvAgent extends Agent {
 	        	br.close();
 	        }
 	    } catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 	    }
 		
@@ -66,6 +66,7 @@ public class EnvAgent extends Agent {
 	    //Create the window
 	    m_sudokuWindow = new SudokuWindow(this);
 		
+	    //On lance le Behaviour de lancement de requête aux agents Analyse
 		addBehaviour(new EnvReceiveMessageBehaviour(this));		
 	}
 	
@@ -74,7 +75,7 @@ public class EnvAgent extends Agent {
 	
 	
 
-	//Events
+	//Events for GUI
 	public void addPropertyChangeListener(PropertyChangeListener listener){
 		m_pcs.addPropertyChangeListener(listener);
 	}
@@ -83,7 +84,6 @@ public class EnvAgent extends Agent {
 		m_pcs.removePropertyChangeListener(listener);
 	}
 	
-	//To implement in Behaviour
 	public void firePropertyChange(String propertyName, Object oldValue, Object newValue){
 		m_pcs.firePropertyChange(propertyName, oldValue, newValue);
 	}
@@ -101,8 +101,6 @@ public class EnvAgent extends Agent {
 		else
 			return -1;
 	}
-	@SuppressWarnings("unused")
-	private void setSudoku(Case[][] m_sudoku) {this.m_sudoku = m_sudoku;}
 	
 	
 	
@@ -112,20 +110,21 @@ public class EnvAgent extends Agent {
 	public void setConnectionAnalyseStructure (AID analyseId) {
 		int numberOfEntries = EnvironnementAnalyseCorresp.getNumberOfEntries();
 		if(numberOfEntries < 27){
-			Structure type;
-			if (numberOfEntries < 9)
-				type = Structure.LINE;
-			else if (numberOfEntries < 18)
-				type = Structure.COLUMN;
-			else 
-				type = Structure.SQUARE;
+			Zone type;
+			if (numberOfEntries < 9) //from 0 to 8 -> LINE
+				type = Zone.LINE;
+			else if (numberOfEntries < 18) //from 9 to 17 -> COLUMN
+				type = Zone.COLUMN;
+			else //from 18 to 26 -> SQUARE
+				type = Zone.SQUARE;
 			connectionArray.put(analyseId, new EnvironnementAnalyseCorresp(numberOfEntries%9, type, analyseId));
 		}
 		else
 			System.out.println("Too many agents try to resolve the sudoku");
 	}
 	
-	public Structure getTypeOfConnectionFromAnalyseId (AID id){return connectionArray.get(id).getType();}
+	//Accès à la table de correspondance en fonction d'un AID d'agent
+	public Zone getTypeOfConnectionFromAnalyseId (AID id){return connectionArray.get(id).getType();}
 	public int getIndexOfConnectionFromAnalyseId (AID id) {return connectionArray.get(id).getIndex();}
 	public AID getRealAIDofConnectionFromAnalyseId (AID id) {return connectionArray.get(id).getAnalyseId();}
 	
@@ -137,17 +136,17 @@ public class EnvAgent extends Agent {
 		
 		//L'index est le numéro de ligne, colonne ou carré
 		//Le type peut être ligne, colonne ou carré
-		Structure type = connectionArray.get(id).getType();
+		Zone type = connectionArray.get(id).getType();
 		int index = connectionArray.get(id).getIndex();
 		ArrayList<Case> newList = new ArrayList<>(9);
 		
-		if (type == EnvAgent.Structure.LINE){
+		if (type == EnvAgent.Zone.LINE){
 			//La zone est une ligne
 			for(int i = 0; i < 9; i++){
 				newList.add(m_sudoku[index][i]);
 			}
 			
-		} else if (type == EnvAgent.Structure.COLUMN){
+		} else if (type == EnvAgent.Zone.COLUMN){
 			//La zone est une colonne
 			for(int i = 0; i < 9; i++){
 				newList.add(m_sudoku[i][index]);
@@ -183,24 +182,26 @@ public class EnvAgent extends Agent {
 		return newList;
 	}
 	
+	//Une zone est résolue si l'ensemble de ses cases a unevaleur != 0
 	public boolean isZoneResolved(AID id){
 		EnvironnementAnalyseCorresp corresp = connectionArray.get(id);
 		int index = corresp.getIndex();
-		Structure type = corresp.getType();
+		Zone type = corresp.getType();
 		
-		if (type == EnvAgent.Structure.LINE){
+		if (type == EnvAgent.Zone.LINE){
 			
 			for(int i = 0; i < 9; i++){
 				if (m_sudoku[index][i].getValue() == 0)
 					return false;
 			}
-		} else if (type == EnvAgent.Structure.COLUMN){
+		} else if (type == EnvAgent.Zone.COLUMN){
 			for(int i = 0; i < 9; i++){
 				if (m_sudoku[i][index].getValue() == 0)
 					return false;
 			}
 			
 		} else{
+			//Meme principe que la méthode précédente
 			int starti = (index / 3) * 3, i = starti;
 			int startj = (index % 3) * 3, j = startj;
 			while(i != starti + 3){
@@ -219,6 +220,7 @@ public class EnvAgent extends Agent {
 	}
 	
 	
+	//Le sudoku est résolue dès que toutes les cases ont une valeur != 0
 	public boolean isSudokuSolved() {
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
@@ -229,22 +231,21 @@ public class EnvAgent extends Agent {
 	
 	
 	//Members
-	private Case m_sudoku[][];
-	private HashMap<AID, EnvironnementAnalyseCorresp> connectionArray;
-	private SudokuWindow m_sudokuWindow;
-	
-	private PropertyChangeSupport m_pcs;
+	private Case m_sudoku[][];	//LE sudoku
+	private HashMap<AID, EnvironnementAnalyseCorresp> connectionArray;	//La table de correspondances
+	private SudokuWindow m_sudokuWindow;	//La vue
+	private PropertyChangeSupport m_pcs;	//Le Property Change Support
 	
 
 	
-	
+	//Classe pour la gestion de chaque correspondance
 	static class EnvironnementAnalyseCorresp {
-		private Integer m_index;
-		private Structure m_type;
-		private AID m_analyseId;
-		static private int numberOfEntries = 0;
+		private Integer m_index;	//Le numéro de ligne, colonne, carré
+		private Zone m_type;	//Le type de zone (ligne colonne ou carré)
+		private AID m_analyseId;	//L'AID de l'agent
+		static private int numberOfEntries = 0;	//Le nombre d'agents enregistrés
 		
-		public EnvironnementAnalyseCorresp(int index, Structure type, AID analyseId) {
+		public EnvironnementAnalyseCorresp(int index, Zone type, AID analyseId) {
 			m_index = index;
 			m_type = type;
 			m_analyseId = analyseId;
@@ -261,11 +262,11 @@ public class EnvAgent extends Agent {
 			this.m_index = m_index;
 		}
 
-		public Structure getType() {
+		public Zone getType() {
 			return m_type;
 		}
 
-		public void setType(Structure m_type) {
+		public void setType(Zone m_type) {
 			this.m_type = m_type;
 		}
 

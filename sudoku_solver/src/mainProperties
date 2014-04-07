@@ -1,5 +1,5 @@
 main=true
-gui=true
+gui=false
 platform-id=sudoku-platform
 local-host=127.0.0.1
 local-port=1338

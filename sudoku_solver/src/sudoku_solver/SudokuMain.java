@@ -10,7 +10,7 @@ public class SudokuMain {
 	
 	public static String MAIN_PROPERTIES_FILE = "src/mainProperties";
 	public static String SECOND_PROPERTIES_FILE = "src/secondProperties";
-	public static String SUDOKU_FILE = "ressources/sudoku1";
+	public static String SUDOKU_FILE = "ressources/sudoku5";
 
 	public static void main(String[] args) {
 		Runtime rt = Runtime.instance();
