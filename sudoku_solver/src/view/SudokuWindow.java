@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -62,6 +63,7 @@ public class SudokuWindow extends JFrame implements PropertyChangeListener {
 				if (m_agent != null){
 					int value = m_agent.getCaseValue(lig, col);
 					m_sudokuArrayLabels[lig][col] = new JLabel(Integer.toString(value), SwingConstants.CENTER);
+					m_sudokuArrayLabels[lig][col].setFont(new Font("Serif", Font.PLAIN, 20));
 					if (value == 0)
 						m_sudokuArrayLabels[lig][col].setForeground(Color.red);
 					else
