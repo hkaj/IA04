@@ -7,10 +7,6 @@ import jade.lang.acl.ACLMessage;
 
 public class EnvCreateLinkBehaviour extends OneShotBehaviour {
 
-	public EnvCreateLinkBehaviour() {
-		// TODO Auto-generated constructor stub
-	}
-
 	public EnvCreateLinkBehaviour(Agent a, ACLMessage message) {
 		super(a);
 		m_listOfAnalAgentmessage = message;
@@ -19,6 +15,7 @@ public class EnvCreateLinkBehaviour extends OneShotBehaviour {
 	@Override
 	public void action() {
 		
+		//Creating the link between Analyse Agent and Zone
 		EnvAgent agent = (EnvAgent) myAgent;
 		AID anaAgentId = (AID) m_listOfAnalAgentmessage.getAllReplyTo().next();
 		agent.setConnectionAnalyseStructure(anaAgentId);

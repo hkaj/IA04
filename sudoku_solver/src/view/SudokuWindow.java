@@ -109,7 +109,8 @@ public class SudokuWindow extends JFrame implements PropertyChangeListener {
 			int col = (int) args[1];
 			int value = (int) args[2];
 			m_sudokuArrayLabels[lig][col].setText(Integer.toString(value));
-			m_sudokuArrayLabels[lig][col].setForeground(Color.black);
+			if (value != 0)
+				m_sudokuArrayLabels[lig][col].setForeground(Color.black);
 		}
 	}
 	

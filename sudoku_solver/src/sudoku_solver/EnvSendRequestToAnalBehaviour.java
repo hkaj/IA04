@@ -25,15 +25,14 @@ public class EnvSendRequestToAnalBehaviour extends OneShotBehaviour {
 		ACLMessage order = new ACLMessage(ACLMessage.REQUEST);
 		order.addReceiver(m_receiver);
 		
-		//On vérifie d'abord que la zone dont doit s'occuper l'AnaAgent n'est pas déjà résolue
+		//On vérifie d'abord que le sudoku n'est pas déjà résolu
 		EnvAgent agent = (EnvAgent) myAgent;
-		//if (!agent.isZoneResolved(m_receiver)){
-		//if (true){
 		if (!agent.isSudokuSolved()){
+			//On récupère les listes de case pour un agent d'Analyse donné
 			ArrayList<Case> zoneCases = agent.getListOfCasesFromAID(m_receiver);
 			
 			//DEBUG
-			if (agent.getIndexOfConnectionFromAnalyseId(m_receiver) == 5 && agent.getTypeOfConnectionFromAnalyseId(m_receiver) == EnvAgent.Structure.LINE){
+			/*if (agent.getIndexOfConnectionFromAnalyseId(m_receiver) == 5 && agent.getTypeOfConnectionFromAnalyseId(m_receiver) == EnvAgent.Zone.LINE){
 				System.out.println("TO BE SENT");
 				for (Iterator<Case> it = zoneCases.iterator(); it.hasNext();){
 					Case nex = it.next();
@@ -42,9 +41,10 @@ public class EnvSendRequestToAnalBehaviour extends OneShotBehaviour {
 						System.out.println(it2.next());
 					}
 				}
-			}
+			}*/
 			//DEBUG
 			
+			//Parsing de la requête
 			ObjectMapper writerMapper = new ObjectMapper();
 			try{
 				HashMap<String, ArrayList<Case>> casesMap = new HashMap<String, ArrayList<Case>>();
@@ -65,12 +65,11 @@ public class EnvSendRequestToAnalBehaviour extends OneShotBehaviour {
 			//System.out.println(m_receiver);
 			
 		} else {
+			//On envoie un message à Simul pour lui dire que le Sudoku est résolu
 			ACLMessage sudokuSolvedMessage = new ACLMessage(ACLMessage.CONFIRM);
 			sudokuSolvedMessage.addReceiver(m_simul);
 			myAgent.send(sudokuSolvedMessage);
-		}/* else {
-			System.out.println("Zone résolue, pas de message envoyé");
-		}*/
+		}
 
 	}
 	
