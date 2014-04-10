@@ -26,6 +26,8 @@ public class EnvReceiveMessageBehaviour extends CyclicBehaviour {
 				System.out.println("Message with performative " + message.getPerformative() + " is not processed");
 			}
 		}
+		else
+			block();
 	}
 
 }

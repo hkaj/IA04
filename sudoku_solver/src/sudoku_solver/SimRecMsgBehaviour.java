@@ -28,6 +28,8 @@ public class SimRecMsgBehaviour extends CyclicBehaviour {
 				System.out.println("SimulAgent received an unexpected message.");
 			}
 		}
+		else
+			block();
 	}
 
 	// Members

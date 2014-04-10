@@ -45,6 +45,8 @@ public class AnaRecMsgBehaviour extends CyclicBehaviour {
 				System.out.println("Agent " + order.getSender() + "sent a " + order.getPerformative() + ": " + order.getContent());
 			}
 		}
+		else
+			block();
 	}
 	
 	// Members

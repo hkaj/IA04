@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
-import sudoku_solver.Case;
 import sudoku_solver.EnvAgent;
 
 public class SudokuWindow extends JFrame implements PropertyChangeListener {

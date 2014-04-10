@@ -3,7 +3,6 @@ package sudoku_solver;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
