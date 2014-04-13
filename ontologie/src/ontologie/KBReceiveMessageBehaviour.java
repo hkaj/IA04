@@ -4,9 +4,9 @@ import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
-public class InterfaceReceiveMessageBehaviour extends CyclicBehaviour {
-
-	public InterfaceReceiveMessageBehaviour(Agent a) {
+public class KBReceiveMessageBehaviour extends CyclicBehaviour {
+	
+	public KBReceiveMessageBehaviour(Agent a) {
 		super(a);
 	}
 
@@ -14,10 +14,7 @@ public class InterfaceReceiveMessageBehaviour extends CyclicBehaviour {
 	public void action() {
 		ACLMessage message = myAgent.receive();
 		if (message != null){
-			if (message.getPerformative() == ACLMessage.PROPAGATE){
-				
-			}
-			else if (message.getPerformative() == ACLMessage.INFORM) {
+			if (message.getPerformative() == ACLMessage.QUERY_REF){
 				
 			}
 			else
@@ -26,7 +23,6 @@ public class InterfaceReceiveMessageBehaviour extends CyclicBehaviour {
 		else {
 			block();
 		}
-
 	}
 
 }
