@@ -1,5 +1,5 @@
 main=false
-gui=true
+gui=false
 platform-id=tdia04
 local-host=127.0.0.1
-local-port=1337
+local-port=1338
