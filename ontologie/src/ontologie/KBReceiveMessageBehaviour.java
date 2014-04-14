@@ -15,7 +15,7 @@ public class KBReceiveMessageBehaviour extends CyclicBehaviour {
 		ACLMessage message = myAgent.receive();
 		if (message != null){
 			if (message.getPerformative() == ACLMessage.QUERY_REF){
-				
+					myAgent.addBehaviour(new KBRequestProcessBehaviour(myAgent, message));
 			}
 			else
 				System.out.println("Received unexpected message");

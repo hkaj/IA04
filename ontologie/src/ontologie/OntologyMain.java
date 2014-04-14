@@ -28,10 +28,10 @@ public class OntologyMain {
 			ex.printStackTrace();
 		}
 		
-		//Instanciation de l'agent chargé de la base de connaissances
+		//Instanciation de l'agent chargï¿½ de la base de connaissances
 		try{
 			Profile p = new ProfileImpl(SECOND_PROPERTIES_FILE);
-			ContainerController kbContainer = rt.createMainContainer(p);
+			ContainerController kbContainer = rt.createAgentContainer(p);
 			AgentController kbAgent = kbContainer.createNewAgent("KB", KnowledgeBaseAgent.class.getName(), new Object[0]);
 
 			kbAgent.start();
