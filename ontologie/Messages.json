@@ -1,0 +1,13 @@
+{
+	"content" :
+	{
+		"keep" :
+		{
+			"http://www.IA04TD5p014.org/jean" : "subject"
+		},
+		"drop" :
+		{
+		
+		}
+	}
+}
