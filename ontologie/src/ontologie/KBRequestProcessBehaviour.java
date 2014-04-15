@@ -8,6 +8,9 @@ import java.util.Iterator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.SimpleSelector;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import com.hp.hpl.jena.util.iterator.Filter;
@@ -98,6 +101,23 @@ public class KBRequestProcessBehaviour extends OneShotBehaviour {
 								return false;
 						}
 					});
+				} else if (keepNode.get(key).asText().equals("property")){
+					Property prop = m_agent.getModel().getProperty(key);
+					SimpleSelector selector = new SimpleSelector(null, prop, key);
+					for (Statement s : statements.toList()) {
+						if (!selector.test(s)) {
+							s.remove();
+						}
+					}
+//					statements = statements.filterKeep(new Filter<Statement>(){
+//						@Override
+//						public boolean accept(Statement arg){
+//							if (arg.getObject().isResource())
+//								return arg.getProperty(arg0)
+//							else
+//								return false;
+//						}
+//					});
 				}
 			}
 		}else

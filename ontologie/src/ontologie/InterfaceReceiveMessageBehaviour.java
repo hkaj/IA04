@@ -13,20 +13,14 @@ public class InterfaceReceiveMessageBehaviour extends CyclicBehaviour {
 	@Override
 	public void action() {
 		ACLMessage message = myAgent.receive();
+		
 		if (message != null){
 			if (message.getPerformative() == ACLMessage.PROPAGATE){
-				
+				myAgent.addBehaviour(new InterfaceFormatRequestBehaviour(myAgent, message));
 			}
-			else if (message.getPerformative() == ACLMessage.INFORM) {
-				
-			}
-			else
-				System.out.println("Received unexpected message");
 		}
-		else {
+		else
 			block();
-		}
-
 	}
 
 }
