@@ -32,8 +32,6 @@ public class KBRequestProcessBehaviour extends OneShotBehaviour {
 	public void action() {
 		String content = m_message.getContent();
 		
-		//System.out.println(content);
-		
 		ExtendedIterator<Statement> statements = m_agent.getModel().listStatements();
 		
 		//convert JSON string to Map
@@ -51,10 +49,8 @@ public class KBRequestProcessBehaviour extends OneShotBehaviour {
 		}
 	
 		if (dropNode != null && keepNode != null){
-			
 			//Filtrage par exclusion d'information
 			for (Iterator<String> it = dropNode.fieldNames(); it.hasNext();){
-				
 				final String key = it.next();
 				
 				if (dropNode.get(key).asText().equals("subject")){
