@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,88 +37,43 @@ public class KBRequestProcessBehaviour extends OneShotBehaviour {
 		
 		//convert JSON string to Map
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode root, contentNode = null, dropNode = null, keepNode = null;
+		JsonNode root;
+		final JsonNode contentNode;
 		try {
 			root = mapper.readValue(content, JsonNode.class);
-			
 			contentNode = root.path("content");
-			keepNode = contentNode.path("keep");
-			dropNode = contentNode.path("drop");
-			
+		
+			//Filtrage par inclusion d'information
+				for (Iterator<String> it = contentNode.fieldNames(); it.hasNext();){
+					
+					final String key = it.next();					
+					
+					//Séparation des deux cas (on connait ID / on connait prop-value)
+					if (key.equals("id")){
+							statements = statements.filterKeep(new Filter<Statement>(){
+								@Override
+								public boolean accept(Statement arg){
+									return arg.getSubject().getURI().equals(contentNode.get(key).asText());
+								}
+							});
+					} else if (key.equals("prop-name")){
+						Property prop = m_agent.getModel().getProperty(contentNode.get("prop-value").asText());
+						String value = contentNode.get("prop-value").asText();
+						SimpleSelector selector = new SimpleSelector(null, prop, value);
+						List<Statement> statementList = statements.toList(); 
+						for (Statement s : statementList) {
+							if (!selector.test(s)) {
+								s.remove();
+							}
+						}
+					}
+					
+					
+				}
+				
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	
-		if (dropNode != null && keepNode != null){
-			//Filtrage par exclusion d'information
-			for (Iterator<String> it = dropNode.fieldNames(); it.hasNext();){
-				final String key = it.next();
-				
-				if (dropNode.get(key).asText().equals("subject")){
-					statements = statements.filterDrop(new Filter<Statement>(){
-						@Override
-						public boolean accept(Statement arg){
-							return arg.getSubject().getURI().equals(key);
-						}
-					});
-				} else if (dropNode.get(key).asText().equals("object")){
-					statements = statements.filterDrop(new Filter<Statement>(){
-						@Override
-						public boolean accept(Statement arg){
-							if (arg.getObject().isResource())
-								return arg.getObject().asResource().getURI().equals(key);
-							else
-								return false;
-						}
-					});
-				}
-			}
-	
-		
-		
-		//Filtrage par inclusion d'information
-			for (Iterator<String> it = keepNode.fieldNames(); it.hasNext();){
-				
-				final String key = it.next();
-				
-				if (keepNode.get(key).asText().equals("subject")){
-					statements = statements.filterKeep(new Filter<Statement>(){
-						@Override
-						public boolean accept(Statement arg){
-							return arg.getSubject().getURI().equals(key);
-						}
-					});
-				} else if (keepNode.get(key).asText().equals("object")){
-					statements = statements.filterKeep(new Filter<Statement>(){
-						@Override
-						public boolean accept(Statement arg){
-							if (arg.getObject().isResource())
-								return arg.getObject().asResource().getURI().equals(key);
-							else
-								return false;
-						}
-					});
-				} else if (keepNode.get(key).asText().equals("property")){
-					Property prop = m_agent.getModel().getProperty(key);
-					SimpleSelector selector = new SimpleSelector(null, prop, key);
-					for (Statement s : statements.toList()) {
-						if (!selector.test(s)) {
-							s.remove();
-						}
-					}
-//					statements = statements.filterKeep(new Filter<Statement>(){
-//						@Override
-//						public boolean accept(Statement arg){
-//							if (arg.getObject().isResource())
-//								return arg.getProperty(arg0)
-//							else
-//								return false;
-//						}
-//					});
-				}
-			}
-		}else
-			System.out.println("Error in JSON parsing");
 		
 		String newContent;
 		ArrayList<AID> receivers;

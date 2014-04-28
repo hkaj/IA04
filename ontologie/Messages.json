@@ -15,3 +15,37 @@
 
 id|name|Jean Val
 id|name|Paul le Poulpe
+
+
+
+
+
+// Version 2 des messages
+
+// Via la console :
+
+id
+prop-name|prop-value
+
+ex :
+td5:jean
+foaf:name|Jean Val
+foaf:knows|td5:paul
+
+// En JSON :
+
+{
+	"content" :
+	{
+		"id" : "http://www.IA04TD5p014.org/jean"
+	}
+}
+
+
+{
+	"content" :
+	{
+		"prop-value" : "http://www.IA04TD5p014.org/paul",
+		"prop-name" : "http://xmlns.com/foaf/0.1/knows"
+	}
+}
