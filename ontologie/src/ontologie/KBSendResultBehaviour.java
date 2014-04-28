@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.lang.acl.ACLMessage;
 
 public class KBSendResultBehaviour extends OneShotBehaviour {
 
@@ -17,8 +18,12 @@ public class KBSendResultBehaviour extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		// TODO Auto-generated method stub
-
+		System.out.println("KB message content : " + m_messageContent);
+		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+		for (AID receiver : m_receivers)
+			message.addReceiver(receiver);
+		message.setContent(m_messageContent);
+		myAgent.send(message);
 	}
 	
 	//Members

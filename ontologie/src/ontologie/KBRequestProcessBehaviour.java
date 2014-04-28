@@ -1,12 +1,15 @@
 package ontologie;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -75,14 +78,35 @@ public class KBRequestProcessBehaviour extends OneShotBehaviour {
 			e.printStackTrace();
 		}
 		
-		String newContent;
-		ArrayList<AID> receivers;
+		//Format the result
+		ObjectMapper writerMapper = new ObjectMapper();
+		StringWriter sw = new StringWriter();
+		
+		HashMap<String, Object> newContent = new HashMap<>();
+		ArrayList<String> statementsToSend = new ArrayList<>();
 		
 		while (statements.hasNext()){
-			System.out.println(statements.next());
+			String assertion = statements.next().toString();
+			statementsToSend.add(assertion);
 		}
 		
-		//myAgent.addBehaviour(new KBSendResultBehaviour(myAgent, newContent, receivers));
+		newContent.put("assert",statementsToSend);
+		
+		HashMap<String, Object> jsonContent = new HashMap<>();
+		jsonContent.put("content", newContent);
+		
+		try {
+			writerMapper.writeValue(sw, jsonContent);
+			String messageContent = sw.toString();
+			
+			   ArrayList<AID> receivers = new ArrayList<>();
+			   receivers.add(m_message.getSender());		
+				
+				myAgent.addBehaviour(new KBSendResultBehaviour(myAgent, messageContent, receivers));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	
