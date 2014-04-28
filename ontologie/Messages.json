@@ -25,12 +25,13 @@ id|name|Paul le Poulpe
 // Via la console :
 
 id
-prop-name|prop-value
+prop|prop-name|prop-value
+assert|id|prop-name
 
 ex :
 td5:jean
 foaf:name|Jean Val
-foaf:knows|td5:paul
+td5:paul|foaf:knows
 
 // En JSON :
 
@@ -45,7 +46,16 @@ foaf:knows|td5:paul
 {
 	"content" :
 	{
-		"prop-value" : "http://www.IA04TD5p014.org/paul",
+		"prop-name" : "http://xmlns.com/foaf/0.1/name",
+		"prop-value" : "Yvan le barbare"
+	}
+}
+
+
+{
+	"content" :
+	{
+		"id" : "http://www.IA04TD5p014.org/paul",
 		"prop-name" : "http://xmlns.com/foaf/0.1/knows"
 	}
 }
