@@ -1,15 +1,12 @@
 package model;
 
-import jade.core.Agent;
+import sim.engine.SimState;
+import sim.engine.Steppable;
 
-public class BugAgent extends Agent {
+public class BugAgent implements Steppable {
 
 	public BugAgent() {
 		super();
-	}
-	
-	@Override
-	protected void setup() {
 		//Initializing the insect capacities
 		DISTANCE_DEPLACEMENT = 1 + (int)(Math.random() * Constants.getInstance().NB_MAX_DEPLACEMENT());
 		DISTANCE_PERCEPTION = 1 + (int)(Math.random() * Constants.getInstance().NB_MAX_PERCEPTION());
@@ -18,9 +15,12 @@ public class BugAgent extends Agent {
 		
 		VIE = VIE_MAX;
 		CHARGE = 0;
+	}
+	
+	@Override
+	public void step(SimState arg0) {
+		// TODO Auto-generated method stub
 		
-		//Add Behaviours
-		addBehaviour(new BugReceiveMessageBehaviour(this));
 	}
 	
 	public void increaseCharge() throws Exception
@@ -49,6 +49,16 @@ public class BugAgent extends Agent {
 		--VIE;
 	}
 	
+	public void move(SimulationAgent simulAgent){
+		//TODO
+	}
+	
+	//Getters & Setters
+	public int x(){return m_x;}
+	public int y(){return m_y;}
+	public void setX(int x){m_x = x;}
+	public void setY(int y){m_y=y;}
+	
 	//Members
 	private int DISTANCE_DEPLACEMENT;
 	private int DISTANCE_PERCEPTION;
@@ -56,5 +66,8 @@ public class BugAgent extends Agent {
 	private int VIE_MAX;
 	private int VIE;
 	private int CHARGE;
+	
+	private int m_x;
+	private int m_y;
 	
 }
