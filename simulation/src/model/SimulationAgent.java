@@ -2,6 +2,7 @@ package model;
 
 import sim.engine.SimState;
 import sim.field.grid.SparseGrid2D;
+import sim.util.Bag;
 import sim.util.Int2D;
 import jade.core.Agent;
 
@@ -25,7 +26,7 @@ public class SimulationAgent extends SimState {
 	private void addBugAgents() {
 		for(int i = 0; i < Constants.getInstance().NB_BUGS(); i++) {
 			BugAgent bug = new BugAgent();
-			Int2D location = getFreeLocation();
+			Int2D location = getFreeLocation(bug);
 			m_grid.setObjectLocation(bug, location.x, location.y);
 			bug.setX(location.x);
 			bug.setY(location.y);
@@ -34,16 +35,23 @@ public class SimulationAgent extends SimState {
 	}
 
 	
-	private Int2D getFreeLocation() {
+	private Int2D getFreeLocation(Object objToAdd) {
 		//Trouve une case libre adjacente où se déplacer
-		Int2D location = new Int2D(random.nextInt(m_grid.getWidth()),
-		random.nextInt(m_grid.getHeight()) );
-		while ((m_grid.getObjectsAtLocation(location.x,location.y)) != null) {
-			location = new Int2D(random.nextInt(m_grid.getWidth()),
-			random.nextInt(m_grid.getHeight()));
-		}
+		//Une case ne contenant pas d'autre object du même type que objToAdd est éligible
+		Int2D location = null;
+		do{
+			location = new Int2D(random.nextInt(m_grid.getWidth()), random.nextInt(m_grid.getHeight()));
+			Bag objBag = m_grid.getObjectsAtLocation(location.x,location.y);
+			if (objBag != null){
+				for (Object obj : objBag){
+					if (obj.getClass().isAssignableFrom(objToAdd.getClass()) || objToAdd.getClass().isAssignableFrom(obj.getClass())){
+						location = null;
+						break;
+					}
+				}
+			}
+		} while (location == null);
 		return location;
-
 	}
 	
 	//Getters & Setters
