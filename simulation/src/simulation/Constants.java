@@ -44,6 +44,10 @@ public class Constants {
 		return NB_MAX_PERCEPTION;
 	}
 
+	public final int NB_MAX_VIE() {
+		return NB_MAX_VIE;
+	}
+
 	//Members
 	private int NB_LINE_AND_COLUMNS = 10;
 	private int NB_BUGS = 4;
@@ -52,4 +56,5 @@ public class Constants {
 	private int NB_MAX_DEPLACEMENT = 3;
 	private int NB_MAX_CHARGE = 2;
 	private int NB_MAX_PERCEPTION = 5;
+	private int NB_MAX_VIE = 10;
 }
