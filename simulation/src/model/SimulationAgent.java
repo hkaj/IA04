@@ -1,6 +1,7 @@
 package model;
 
 import sim.engine.SimState;
+import sim.engine.Stoppable;
 import sim.field.grid.SparseGrid2D;
 import sim.util.Bag;
 import sim.util.Int2D;
@@ -30,7 +31,8 @@ public class SimulationAgent extends SimState {
 			m_grid.setObjectLocation(bug, location.x, location.y);
 			bug.setX(location.x);
 			bug.setY(location.y);
-			schedule.scheduleRepeating(bug);
+			Stoppable stoppable = schedule.scheduleRepeating(bug);
+			bug.setStoppable(stoppable);
 		}
 	}
 	
@@ -61,6 +63,13 @@ public class SimulationAgent extends SimState {
 		} while (location == null);
 		return location;
 	}
+	
+	
+	public void removeBugAgent(BugAgent bug){
+		m_grid.remove(bug);
+		bug.getStoppable().stop();
+	}
+	
 	
 	//Getters & Setters
 	public final SparseGrid2D getGrid() { return m_grid;}

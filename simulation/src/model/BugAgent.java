@@ -2,6 +2,7 @@ package model;
 
 import sim.engine.SimState;
 import sim.engine.Steppable;
+import sim.engine.Stoppable;
 
 public class BugAgent implements Steppable {
 
@@ -21,9 +22,11 @@ public class BugAgent implements Steppable {
 	}
 	
 	@Override
-	public void step(SimState arg0) {
-		// TODO Auto-generated method stub
+	public void step(SimState simState) {
+		SimulationAgent simulAgent = (SimulationAgent) simState;
 		
+		if (VIE <= 0)
+			simulAgent.removeBugAgent(this);
 	}
 	
 	public void increaseCharge() throws Exception
@@ -62,6 +65,14 @@ public class BugAgent implements Steppable {
 	public void setX(int x){m_x = x;}
 	public void setY(int y){m_y=y;}
 	
+	public Stoppable getStoppable() {
+		return m_stoppable;
+	}
+
+	public void setStoppable(Stoppable m_stoppable) {
+		this.m_stoppable = m_stoppable;
+	}
+
 	//Members
 	private int DISTANCE_DEPLACEMENT;
 	private int DISTANCE_PERCEPTION;
@@ -72,5 +83,7 @@ public class BugAgent implements Steppable {
 	
 	private int m_x;
 	private int m_y;
+	
+	private Stoppable m_stoppable;
 	
 }
