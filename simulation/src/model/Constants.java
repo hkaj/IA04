@@ -48,6 +48,14 @@ public class Constants {
 		return NB_CAPACITIES;
 	}
 	
+	public final int NB_MAX_SUPPLIES() {
+		return NB_MAX_SUPPLIES;
+	}
+	
+	public final int NB_ENERGY(){
+		return NB_ENERGY;
+	}
+	
 	
 	//Members
 	private int NB_LINE_AND_COLUMNS = 10;
@@ -60,4 +68,8 @@ public class Constants {
 	private int NB_CAPACITIES = 10;
 	private int NB_MAX_VIE = 10;
 
+	//Properties for food
+	private int NB_MAX_SUPPLIES = 5;
+	private int NB_ENERGY = 3;
+	
 }

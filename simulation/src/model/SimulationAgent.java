@@ -20,9 +20,9 @@ public class SimulationAgent extends SimState {
 		
 		//Remplissage de la grille avec les insectes et la nourriture
 		addBugAgents();
-		//TODO
+		addFood();
 	}
-	
+
 	private void addBugAgents() {
 		for(int i = 0; i < Constants.getInstance().NB_BUGS(); i++) {
 			BugAgent bug = new BugAgent();
@@ -33,7 +33,15 @@ public class SimulationAgent extends SimState {
 			schedule.scheduleRepeating(bug);
 		}
 	}
-
+	
+	private void addFood() {
+		for(int i = 0; i < Constants.getInstance().NB_FOOD_CELL(); ++i){
+			Food food = new Food(true);
+			Int2D location = getFreeLocation(food);
+			m_grid.setObjectLocation(food, location);
+			food.setLocation(location);
+		}		
+	}
 	
 	private Int2D getFreeLocation(Object objToAdd) {
 		//Trouve une case libre adjacente où se déplacer
