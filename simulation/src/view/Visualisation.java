@@ -10,6 +10,7 @@ import model.SimulationAgent;
 import sim.display.Controller;
 import sim.display.Display2D;
 import sim.display.GUIState;
+import sim.portrayal.Inspector;
 import sim.portrayal.grid.SparseGridPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
 
@@ -66,9 +67,32 @@ public class Visualisation extends GUIState {
 		return "Simulation d'insectes";
 	}
 	
+	
+	//Create Inspector
+	public Object getSimulationInspectedObject() {return state;}
+	
+	public Inspector getInspector() {
+		Inspector insp = super.getInspector();
+		insp.setVolatile(true);
+		return insp;
+	}
+	
+	
+	//Getters & Setters
+	public int getNumBugs() {
+		return m_nbOfBugs;
+	}
+	
+	
+	public void setNumBugs(int nb) {
+		m_nbOfBugs = nb;
+	}
+
+	
 	//Members
 	private Display2D m_display;
 	private JFrame m_displayFrame;
 	private SparseGridPortrayal2D m_gridPortrayal = new SparseGridPortrayal2D();
 	private SimulationAgent m_simulationAgent;
+	private int m_nbOfBugs;
 }
