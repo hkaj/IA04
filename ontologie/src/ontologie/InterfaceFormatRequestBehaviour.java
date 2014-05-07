@@ -29,11 +29,12 @@ public class InterfaceFormatRequestBehaviour extends OneShotBehaviour {
 		
 		String fuck = m_message.getContent();
 		String[] data;
-		if (fuck.contains("§")){
-			data = fuck.split("§");
+		if (fuck.contains("Â§")){
+			data = fuck.split("Â§");
 		} else
 			data = null;
-		
+//		System.out.println("1 " + data[0]);
+//		System.out.println("2 " +data[2]);
 		ObjectMapper writerMapper = new ObjectMapper();
 		try{
 			StringWriter sw = new StringWriter();
@@ -46,11 +47,11 @@ public class InterfaceFormatRequestBehaviour extends OneShotBehaviour {
 				// Trois informations dans le message : type/key1/key2
 				
 				if (data[0].equals("prop")){
-					// On veut les assertions pour une propriété et une valeur donnée
+					// On veut les assertions pour une propriï¿½tï¿½ et une valeur donnï¿½e
 					content.put("prop-name", data[1]);
 					content.put("prop-value", data[2]);
 				} else if (data[0].equals("assert")) {
-					// On veut les assertions pour un id et une propriété donnés
+					// On veut les assertions pour un id et une propriï¿½tï¿½ donnï¿½s
 					content.put("id", data[1]);
 					content.put("prop-name", data[2]);
 				}
