@@ -32,11 +32,12 @@ public class Visualisation extends GUIState {
 		m_displayFrame.setTitle("Bugs");
 		c.registerFrame(m_displayFrame);
 		m_displayFrame.setVisible(true);
+		setupPortrayals();
 		m_display.attach( m_gridPortrayal, "Insect Grid" );
 	}
 	
 	
-	public void setupPortrayals() {
+	private void setupPortrayals() {
 		//Setting the representation for each component
 		m_gridPortrayal.setField(m_simulationAgent.getGrid());
 		m_gridPortrayal.setPortrayalForClass(BugAgent.class, getBugAgentPortrayal());
