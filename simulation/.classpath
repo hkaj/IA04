@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/jackson-core-2.2.0.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-databind-2.2.0.jar"/>
 	<classpathentry kind="lib" path="lib/jade.jar"/>
+	<classpathentry kind="lib" path="lib/java3d_1.5.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
