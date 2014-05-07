@@ -8,9 +8,12 @@ public class BugAgent implements Steppable {
 	public BugAgent() {
 		super();
 		//Initializing the insect capacities
-		DISTANCE_DEPLACEMENT = 1 + (int)(Math.random() * Constants.getInstance().NB_MAX_DEPLACEMENT());
-		DISTANCE_PERCEPTION = 1 + (int)(Math.random() * Constants.getInstance().NB_MAX_PERCEPTION());
-		CHARGE_MAX = 1 + (int)(Math.random() * Constants.getInstance().NB_MAX_CHARGE());
+		int remainingPointsToGive = Constants.getInstance().NB_CAPACITIES() - 1;	//We need at least 1 point in perception
+		DISTANCE_DEPLACEMENT = 1 + (int)(Math.random() * (Math.min(Constants.getInstance().NB_MAX_DEPLACEMENT(),remainingPointsToGive) - 1));
+		remainingPointsToGive -= DISTANCE_DEPLACEMENT;
+		CHARGE_MAX = 1 + (int)(Math.random() * (Math.min(Constants.getInstance().NB_MAX_CHARGE(), remainingPointsToGive) - 1));
+		remainingPointsToGive -= CHARGE_MAX;
+		DISTANCE_PERCEPTION = 1 + remainingPointsToGive;
 		VIE_MAX = Constants.getInstance().NB_MAX_VIE();
 		
 		VIE = VIE_MAX;

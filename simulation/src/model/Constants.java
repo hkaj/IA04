@@ -28,8 +28,8 @@ public class Constants {
 		return NB_BUGS;
 	}
 
-	public final int NB_FOOD() {
-		return NB_FOOD;
+	public final int NB_FOOD_CELL() {
+		return NB_FOOD_CELL;
 	}
 
 	public final int NB_MAX_DEPLACEMENT() {
@@ -40,21 +40,24 @@ public class Constants {
 		return NB_MAX_CHARGE;
 	}
 
-	public final int NB_MAX_PERCEPTION() {
-		return NB_MAX_PERCEPTION;
-	}
-
 	public final int NB_MAX_VIE() {
 		return NB_MAX_VIE;
 	}
-
+	
+	public final int NB_CAPACITIES(){
+		return NB_CAPACITIES;
+	}
+	
+	
 	//Members
 	private int NB_LINE_AND_COLUMNS = 10;
 	private int NB_BUGS = 4;
-	private int NB_FOOD = 12;
+	private int NB_FOOD_CELL = 12;
 	
-	private int NB_MAX_DEPLACEMENT = 3;
-	private int NB_MAX_CHARGE = 2;
-	private int NB_MAX_PERCEPTION = 5;
+	//Properties for bugs
+	private int NB_MAX_DEPLACEMENT = 5;
+	private int NB_MAX_CHARGE = 5;
+	private int NB_CAPACITIES = 10;
 	private int NB_MAX_VIE = 10;
+
 }
