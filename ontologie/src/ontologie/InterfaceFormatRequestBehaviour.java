@@ -27,14 +27,13 @@ public class InterfaceFormatRequestBehaviour extends OneShotBehaviour {
 		ACLMessage request = new ACLMessage(ACLMessage.QUERY_REF);
 		request.addReceiver(searchKnowledgeBase());
 		
-		String fuck = m_message.getContent();
+		String msg = m_message.getContent();
 		String[] data;
-		if (fuck.contains("§")){
-			data = fuck.split("§");
+		if (msg.contains("§")){
+			data = msg.split("§");
 		} else
 			data = null;
-//		System.out.println("1 " + data[0]);
-//		System.out.println("2 " +data[2]);
+
 		ObjectMapper writerMapper = new ObjectMapper();
 		try{
 			StringWriter sw = new StringWriter();
@@ -45,7 +44,6 @@ public class InterfaceFormatRequestBehaviour extends OneShotBehaviour {
 				content.put("id", m_message.getContent());
 			} else if (data.length == 3) {
 				// Trois informations dans le message : type/key1/key2
-				
 				if (data[0].equals("prop")){
 					// On veut les assertions pour une propri�t� et une valeur donn�e
 					content.put("prop-name", data[1]);
@@ -59,47 +57,32 @@ public class InterfaceFormatRequestBehaviour extends OneShotBehaviour {
 			
 			HashMap<String, Object> messageContent = new HashMap<>();
 			messageContent.put("content", content);
-			
 			writerMapper.writeValue(sw, messageContent);
 			request.setContent(sw.toString());
-			
 			System.out.println("Request content : " + request.getContent());
 
 			myAgent.send(request);
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		
-//		if (data.length == 3) {
-//			if (data[0] != "") {
-//				
-//			}
-//		} else {
-//			System.out.println("The request sent through the console isn't correctly formatted.");
-//		}
-
 	}
 	
 	private AID searchKnowledgeBase() {
 		AID aid = new AID();
 		DFAgentDescription template = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
-
 		sd.setType("Knowledge Base");
 		template.addServices(sd);
-
 		try {
 			DFAgentDescription[] result = DFService.search(this.myAgent, template);
 			if (result.length > 0){
 				aid = result[0].getName();
 			}
-		}catch (FIPAException e) {
+		} catch (FIPAException e) {
 			e.printStackTrace();
 		}
 		return aid;
 	}
-
 	//Members
 	private ACLMessage m_message;
-
 }

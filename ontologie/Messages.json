@@ -1,37 +1,16 @@
-{
-	"content" :
-	{
-		"keep" :
-		{
-			"http://www.IA04TD5p014.org/jean" : "subject"
-		},
-		"drop" :
-		{
-		
-		}
-	}
-}
-
-
-id|name|Jean Val
-id|name|Paul le Poulpe
-
-
-
-
-
 // Version 2 des messages
 
 // Via la console :
 
 id
-prop|prop-name|prop-value
-assert|id|prop-name
+prop§prop-name§prop-value
+assert§id§prop-name
 
 ex :
-td5:jean
-foaf:name|Jean Val
-td5:paul|foaf:knows
+http://www.IA04TD5p014.org/jean
+prop§http://xmlns.com/foaf/0.1/name§Jean Val
+prop§http://xmlns.com/foaf/0.1/PrimaryTopic§http://www.IA04TD5p014.org/actu
+assert§http://www.IA04TD5p014.org/jean§http://xmlns.com/foaf/0.1/knows
 
 // En JSON :
 

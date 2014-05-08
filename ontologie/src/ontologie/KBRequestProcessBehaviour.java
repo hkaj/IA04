@@ -37,28 +37,26 @@ public class KBRequestProcessBehaviour extends OneShotBehaviour {
 		List<String> fields = new ArrayList<String>();
 		//convert JSON string to Map
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode root;
 		final JsonNode contentNode;
 		try {
-			root = mapper.readValue(content, JsonNode.class);
-			contentNode = root.path("content");
-		
-			//Filtrage par inclusion d'information
+			contentNode = mapper.readValue(content, JsonNode.class).path("content");
 			for (Iterator<String> it = contentNode.fieldNames(); it.hasNext();){
 				fields.add(it.next());
 			}
+			// We have the subject and the property, let's seek the objects 
 			if (fields.contains("id") && fields.contains("prop-name")) {
 				String propName = contentNode.get("prop-name").asText();
 				Property prop = m_agent.getModel().getProperty(propName);
 				String subjectStr = contentNode.get("id").asText();
 				Resource subject = m_agent.getModel().getResource(subjectStr);
-				SimpleSelector selector = new SimpleSelector(subject, prop, false);
+				SimpleSelector selector = new SimpleSelector(subject, prop, (Resource)null);
 				List<Statement> statementList = statements.toList();
 				for (Statement s : statementList) {
 					if (selector.test(s)) {
 						resultList.add(s);
 					}
 				}
+			// We have the property and the object, let's seek the subjects
 			} else if (fields.contains("prop-name") && fields.contains("prop-value")) {
 				String propName = contentNode.get("prop-name").asText();
 				Property prop = m_agent.getModel().getProperty(propName);
@@ -72,6 +70,7 @@ public class KBRequestProcessBehaviour extends OneShotBehaviour {
 						resultList.add(s);
 					}
 				}
+			// We have a resource, let's seek all the relation for which the subject is this resource 
 			} else if (fields.size() == 1 && fields.contains("id")) {
 				statements = statements.filterKeep(new Filter<Statement>(){
 					@Override
@@ -110,7 +109,7 @@ public class KBRequestProcessBehaviour extends OneShotBehaviour {
 			statementsToSend.add(assertion);
 		}
 		
-		newContent.put("assert",statementsToSend);
+		newContent.put("assert", statementsToSend);
 		
 		HashMap<String, Object> jsonContent = new HashMap<>();
 		jsonContent.put("content", newContent);
