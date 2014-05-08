@@ -41,17 +41,17 @@ public class InterfaceFormatRequestBehaviour extends OneShotBehaviour {
 			
 			if (data == null){
 				// Seul l'ID est dans le message
-				content.put("id", m_message.getContent());
+				content.put("subject", m_message.getContent());
 			} else if (data.length == 3) {
 				// Trois informations dans le message : type/key1/key2
-				if (data[0].equals("prop")){
+				if (data[0].equals("getSubject")){
 					// On veut les assertions pour une propri�t� et une valeur donn�e
-					content.put("prop-name", data[1]);
-					content.put("prop-value", data[2]);
-				} else if (data[0].equals("assert")) {
+					content.put("property", data[1]);
+					content.put("object", data[2]);
+				} else if (data[0].equals("getObject")) {
 					// On veut les assertions pour un id et une propri�t� donn�s
-					content.put("id", data[1]);
-					content.put("prop-name", data[2]);
+					content.put("subject", data[1]);
+					content.put("property", data[2]);
 				}
 			}
 			
@@ -59,7 +59,7 @@ public class InterfaceFormatRequestBehaviour extends OneShotBehaviour {
 			messageContent.put("content", content);
 			writerMapper.writeValue(sw, messageContent);
 			request.setContent(sw.toString());
-			System.out.println("Request content : " + request.getContent());
+//			System.out.println("Request content : " + request.getContent());
 
 			myAgent.send(request);
 		}catch (Exception e){

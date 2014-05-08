@@ -1,40 +1,10 @@
-// Version 2 des messages
+- Format of the messages:
+subject
+getSubject§property§object
+getObject§object§property
 
-// Via la console :
-
-id
-prop§prop-name§prop-value
-assert§id§prop-name
-
-ex :
+- Examples:
 http://www.IA04TD5p014.org/jean
-prop§http://xmlns.com/foaf/0.1/name§Jean Val
-prop§http://xmlns.com/foaf/0.1/PrimaryTopic§http://www.IA04TD5p014.org/actu
-assert§http://www.IA04TD5p014.org/jean§http://xmlns.com/foaf/0.1/knows
-
-// En JSON :
-
-{
-	"content" :
-	{
-		"id" : "http://www.IA04TD5p014.org/jean"
-	}
-}
-
-
-{
-	"content" :
-	{
-		"prop-name" : "http://xmlns.com/foaf/0.1/name",
-		"prop-value" : "Yvan le barbare"
-	}
-}
-
-
-{
-	"content" :
-	{
-		"id" : "http://www.IA04TD5p014.org/paul",
-		"prop-name" : "http://xmlns.com/foaf/0.1/knows"
-	}
-}
+getSubject§http://xmlns.com/foaf/0.1/name§Jean Val
+getSubject§http://xmlns.com/foaf/0.1/PrimaryTopic§http://www.IA04TD5p014.org/actu
+getObject§http://www.IA04TD5p014.org/jean§http://xmlns.com/foaf/0.1/knows

@@ -18,7 +18,6 @@ public class KBSendResultBehaviour extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		System.out.println("KB message content : " + m_messageContent);
 		ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 		for (AID receiver : m_receivers)
 			message.addReceiver(receiver);
