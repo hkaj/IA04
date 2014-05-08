@@ -1,5 +1,7 @@
 package model;
 
+import sim.util.Int2D;
+
 public class Constants {
 	
 	private Constants(){
@@ -54,6 +56,14 @@ public class Constants {
 	
 	public final int NB_ENERGY(){
 		return NB_ENERGY;
+	}
+	
+	
+	//Tools
+	public int distance(Int2D a, Int2D b){
+		int numberOfXCase = Math.abs(a.x - b.x);
+		int numberOfYCase = Math.abs(a.y - b.y);
+		return Math.max( numberOfXCase , numberOfYCase );
 	}
 	
 	

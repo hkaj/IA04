@@ -5,7 +5,6 @@ import sim.engine.Stoppable;
 import sim.field.grid.SparseGrid2D;
 import sim.util.Bag;
 import sim.util.Int2D;
-import jade.core.Agent;
 
 public class SimulationAgent extends SimState {
 
@@ -21,7 +20,7 @@ public class SimulationAgent extends SimState {
 		
 		//Remplissage de la grille avec les insectes et la nourriture
 		addBugAgents();
-		addFood();
+		addFoods();
 	}
 
 	private void addBugAgents() {
@@ -36,15 +35,22 @@ public class SimulationAgent extends SimState {
 		}
 	}
 	
-	private void addFood() {
+	
+	private void addFoods() {
 		for(int i = 0; i < Constants.getInstance().NB_FOOD_CELL(); ++i){
-			Food food = new Food(true);
-			Int2D location = getFreeLocation(food);
-			m_grid.setObjectLocation(food, location);
-			food.setLocation(location);
+			addFood();
 		}		
 	}
 	
+	
+	private void addFood() {
+		Food food = new Food(true);
+		Int2D location = getFreeLocation(food);
+		m_grid.setObjectLocation(food, location);
+		food.setLocation(location);		
+	}
+	
+
 	private Int2D getFreeLocation(Object objToAdd) {
 		//Trouve une case libre adjacente où se déplacer
 		//Une case ne contenant pas d'autre object du même type que objToAdd est éligible
@@ -65,6 +71,53 @@ public class SimulationAgent extends SimState {
 	}
 	
 	
+	
+	//Bug actions
+	public void bugEatAtFoodPoint(BugAgent bugAgent, Food food) throws Exception {
+		if (food.getNumberOfSupplies() < 0)
+			throw new Exception();
+		
+		//Bug eats
+		bugAgent.increaseVie(Constants.getInstance().NB_ENERGY());
+		food.decreaseNumberOfSupplies();
+		
+		//Need to create new food point if supplies are empty
+		if (food.getNumberOfSupplies() == 0) {
+			m_grid.remove(food);
+			addFood();
+		}
+	}
+	
+	public void bugChargeFood(BugAgent bugAgent) throws Exception {
+		//Find the food object
+		Food food = null;
+		for (Object obj : m_grid.getObjectsAtLocation(bugAgent.x(), bugAgent.y()))
+				if (obj instanceof Food)
+					food = (Food) obj;
+		
+		//Bug charge
+		bugAgent.increaseCharge();
+		food.decreaseNumberOfSupplies();
+		
+		//Need to create new food point if supplies are empty
+		if (food.getNumberOfSupplies() == 0) {
+			m_grid.remove(food);
+			addFood();
+		}
+	}	
+	
+	public void bugMoveToNewLocation(BugAgent bugAgent, Int2D newLocation) throws Exception {
+		//Verify if the new location is available first
+		for (Object obj : m_grid.getObjectsAtLocation(newLocation))
+				if (obj instanceof BugAgent)
+					throw new Exception();
+		
+		//Move the bug
+		m_grid.remove(bugAgent);
+		m_grid.setObjectLocation(bugAgent, newLocation);
+		bugAgent.decreaseVie();
+	}
+	
 	public void removeBugAgent(BugAgent bug){
 		m_grid.remove(bug);
 		bug.getStoppable().stop();
@@ -77,4 +130,5 @@ public class SimulationAgent extends SimState {
 
 	//Members
 	private SparseGrid2D m_grid;
+
 }

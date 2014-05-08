@@ -9,7 +9,7 @@ public class Food {
 	}
 	
 	public Food(boolean isStatic) {
-		m_numberOfSupplies = 1 + (int)(Math.random() * Constants.getInstance().NB_MAX_SUPPLIES());
+		m_numberOfSupplies = 1 + (int)(Math.random() * Constants.getInstance().NB_MAX_SUPPLIES() - 1);
 		m_isStatic = isStatic;
 	}
 	
