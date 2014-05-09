@@ -24,6 +24,12 @@ public class SparqlMain {
 			System.out.println("Executing the query in '" + q + "'...");
 			test(q);
 		}
+		
+		String[] queriesDistant = {"ressources/q21.sparql"};
+		for (String q: queriesDistant) {
+			System.out.println("Executing the query in '" + q + "'...");
+			testDistant(q);
+		}
 
 	}
 	
@@ -43,5 +49,17 @@ public class SparqlMain {
 		ResultSet r = queryExecution.execSelect();
 		ResultSetFormatter.out(System.out, r);
 		queryExecution.close();
+	}
+	
+	public static void testDistant(String queryFile) {
+		Query query = QueryFactory.read(queryFile);
+		
+		//System.setProperty("http.proxyHost","proxyweb.utc.fr");
+		//System.setProperty("http.proxyPort","3128");
+		
+		QueryExecution qexec = QueryExecutionFactory.sparqlService( "http://linkedgeodata.org/sparql", query );
+		ResultSet concepts = qexec.execSelect();
+		ResultSetFormatter.out(System.out, concepts);
+		qexec.close();
 	}
 }
