@@ -6,6 +6,8 @@
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix vs:      <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix geo:	 <http://linkedgeodata.org/triplify/> .
+
 
 td5:pierre rdf:type foaf:Person .
 td5:paul rdf:type foaf:Person .
@@ -42,3 +44,7 @@ td5:nyt foaf:PrimaryTopic td5:actu .
 td5:yves foaf:name "Yvan le barbare" .
 td5:jean foaf:name "Jean Val" .
 td5:paul foaf:name "Paul le Poulpe" .
+
+td5:yves foaf:topic_interest geo:node1363947712 .
+td5:jean foaf:topic_interest geo:node424298311 .
+td5:jacques foaf:topic_interest geo:node424313734 .
