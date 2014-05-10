@@ -1,0 +1,14 @@
+prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix foaf:    <http://xmlns.com/foaf/0.1/>
+prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+prefix geo:	    <http://linkedgeodata.org/triplify/>
+prefix td5:	    <http://www.IA04TD5p014.org/>
+prefix lgdo:    <http://linkedgeodata.org/ontology/>
+
+SELECT ?person
+WHERE {
+	td5:paul foaf:topic_interest ?interest .
+	?person foaf:topic_interest ?interest .
+	?interest a lgdo:Country .
+	FILTER (?person != td5:paul)
+}

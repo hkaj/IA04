@@ -7,6 +7,7 @@
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix vs:      <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
 @prefix geo:	 <http://linkedgeodata.org/triplify/> .
+@prefix lgdo:    <http://linkedgeodata.org/ontology/> .
 
 td5:favoriteBeer
       a       rdf:Property , owl:ObjectProperty ;
@@ -15,6 +16,10 @@ td5:favoriteBeer
       rdfs:isDefinedBy td5: ;
       rdfs:label "favorite beer" ;
       rdfs:range rdfs:Literal .
+
+td5:France a lgdo:Country .
+td5:Espagne a lgdo:Country .
+td5:Allemagne a lgdo:Country .
 
 td5:pierre rdf:type foaf:Person .
 td5:paul rdf:type foaf:Person .
@@ -55,5 +60,9 @@ td5:paul foaf:name "Paul le Poulpe" .
 td5:yves foaf:topic_interest geo:node1363947712 .
 td5:jean foaf:topic_interest geo:node424298311 .
 td5:jacques foaf:topic_interest geo:node424313734 .
+
+td5:paul foaf:topic_interest td5:France .
+td5:jean foaf:topic_interest td5:France .
+td5:pierre foaf:topic_interest td5:Espagne .
 
 td5:jean td5:favoriteBeer "Karmeliet Tripel" .
