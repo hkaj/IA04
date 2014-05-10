@@ -9,9 +9,20 @@ getSubject§http://xmlns.com/foaf/0.1/name§Jean Val
 getSubject§http://xmlns.com/foaf/0.1/PrimaryTopic§http://www.IA04TD5p014.org/actu
 getObject§http://www.IA04TD5p014.org/jean§http://xmlns.com/foaf/0.1/knows
 
+========== SPARQL ==========
+
+Sending a SPARQL request:
+- Choose to send a message to PropagateSparql@tdia04
+- Set the language field to "SPARQL"
+- Write your request in the content field (do not forget the prefixes if you use some)
+- Set the performative to Propagate
+- Send the message.
+
+For some examples, look at the files named "qxy.sparql" in the "ressources" folder.
 
 SPARQL results formatting: 
 
+- q11.sparql response
 {
   "head": {
     "vars": [ "concept" ]
@@ -34,7 +45,7 @@ SPARQL results formatting:
   }
 }
 
-OR
+- q13.sparql response (using foaf.n3 as the ontology).
 
 {
   "head": {

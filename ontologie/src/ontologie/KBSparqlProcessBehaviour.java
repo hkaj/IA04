@@ -1,5 +1,6 @@
 package ontologie;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -7,6 +8,7 @@ import jade.lang.acl.ACLMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,17 +32,16 @@ public class KBSparqlProcessBehaviour extends OneShotBehaviour {
 	@Override
 	public void action() {
 		ObjectMapper mapper = new ObjectMapper();
+		Model model = ModelFactory.createDefaultModel();
+		ArrayList<AID> receivers = new ArrayList<>();
+		receivers.add(m_message.getSender());
 		try {
 			String request = mapper.readValue(m_message.getContent(), JsonNode.class).path("request").asText();
-			Model model = ModelFactory.createDefaultModel();
-			try {
-				model.read(new FileInputStream("ressources/ABox"), null, "TURTLE");
-				String results = runExecQuery(request, model);
-				System.out.println("Results: " + results);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		} catch(Exception e) {
+			model.read(new FileInputStream("ressources/ABox"), null, "TURTLE");
+			String results = runExecQuery(request, model);
+//			System.out.println("Results: " + results);
+			myAgent.addBehaviour(new KBSendResultBehaviour(myAgent, results, receivers));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
