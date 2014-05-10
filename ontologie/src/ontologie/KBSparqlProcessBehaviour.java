@@ -34,7 +34,7 @@ public class KBSparqlProcessBehaviour extends OneShotBehaviour {
 			String request = mapper.readValue(m_message.getContent(), JsonNode.class).path("request").asText();
 			Model model = ModelFactory.createDefaultModel();
 			try {
-				model.read(new FileInputStream("ressources/foaf.n3"), null, "TURTLE");
+				model.read(new FileInputStream("ressources/ABox"), null, "TURTLE");
 				String results = runExecQuery(request, model);
 				System.out.println("Results: " + results);
 			} catch (FileNotFoundException e) {

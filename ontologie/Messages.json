@@ -8,3 +8,57 @@ http://www.IA04TD5p014.org/jean
 getSubject§http://xmlns.com/foaf/0.1/name§Jean Val
 getSubject§http://xmlns.com/foaf/0.1/PrimaryTopic§http://www.IA04TD5p014.org/actu
 getObject§http://www.IA04TD5p014.org/jean§http://xmlns.com/foaf/0.1/knows
+
+
+SPARQL results formatting: 
+
+{
+  "head": {
+    "vars": [ "concept" ]
+  } ,
+  "results": {
+    "bindings": [
+      {
+        "concept": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/Group" }
+      } ,
+      {
+        "concept": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/Document" }
+      } ,
+      {
+        "concept": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/Person" }
+      } ,
+      {
+        "concept": { "type": "uri" , "value": "http://www.w3.org/2002/07/owl#Thing" }
+      }
+    ]
+  }
+}
+
+OR
+
+{
+  "head": {
+    "vars": [ "relation" , "d1" ]
+  } ,
+  "results": {
+    "bindings": [
+      {
+        "relation": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/depicts" } ,
+        "d1": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/Image" }
+      } ,
+      {
+        "relation": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/publications" } ,
+        "d1": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/Person" }
+      } ,
+      ... ,
+      {
+        "relation": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/birthday" } ,
+        "d1": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/Agent" }
+      } ,
+      {
+        "relation": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/made" } ,
+        "d1": { "type": "uri" , "value": "http://xmlns.com/foaf/0.1/Agent" }
+      }
+    ]
+  }
+}
