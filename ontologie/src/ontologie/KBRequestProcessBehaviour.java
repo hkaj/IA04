@@ -128,7 +128,6 @@ public class KBRequestProcessBehaviour extends OneShotBehaviour {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 	

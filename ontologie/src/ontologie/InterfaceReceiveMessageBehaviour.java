@@ -15,7 +15,7 @@ public class InterfaceReceiveMessageBehaviour extends CyclicBehaviour {
 		ACLMessage message = myAgent.receive();
 		
 		if (message != null){
-			if (message.getPerformative() == ACLMessage.PROPAGATE){
+			if (message.getPerformative() == ACLMessage.PROPAGATE && message.getLanguage().equals("BRUT")){
 				myAgent.addBehaviour(new InterfaceFormatRequestBehaviour(myAgent, message));
 			} else if (message.getPerformative() == ACLMessage.INFORM){
 				myAgent.addBehaviour(new InterfaceShowKBAnswer(myAgent,message));

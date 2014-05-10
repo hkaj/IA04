@@ -21,8 +21,9 @@ public class OntologyMain {
 			Profile p = new ProfileImpl(MAIN_PROPERTIES_FILE);
 			ContainerController intContainer = rt.createMainContainer(p);
 			AgentController interfaceAgent = intContainer.createNewAgent("InterfaceAgent", InterfaceAgent.class.getName(), new Object[0]);
-
+			AgentController sparqlAgent = intContainer.createNewAgent("PropagateSparql", PropagateSparql.class.getName(), new Object[0]);
 			interfaceAgent.start();
+			sparqlAgent.start();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
