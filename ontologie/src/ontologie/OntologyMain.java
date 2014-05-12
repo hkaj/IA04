@@ -22,8 +22,10 @@ public class OntologyMain {
 			ContainerController intContainer = rt.createMainContainer(p);
 			AgentController interfaceAgent = intContainer.createNewAgent("InterfaceAgent", InterfaceAgent.class.getName(), new Object[0]);
 			AgentController sparqlAgent = intContainer.createNewAgent("PropagateSparql", PropagateSparql.class.getName(), new Object[0]);
+			AgentController sparqlGeoAgent = intContainer.createNewAgent("PropagateGeoSparql", PropagateGeoSparqlAgent.class.getName(), new Object[0]);
 			interfaceAgent.start();
 			sparqlAgent.start();
+			sparqlGeoAgent.start();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -36,6 +38,18 @@ public class OntologyMain {
 			AgentController kbAgent = kbContainer.createNewAgent("KB", KnowledgeBaseAgent.class.getName(), new Object[0]);
 
 			kbAgent.start();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		//Instanciation de l'agent charg� de la base de connaissances distante
+		try{
+			Profile pro = new ProfileImpl(SECOND_PROPERTIES_FILE);
+			ContainerController kbContainer = rt.createAgentContainer(pro);
+			AgentController geoAgent = kbContainer.createNewAgent("GeodataAgent", GeodataAgent.class.getName(), new Object[0]);
+
+			geoAgent.start();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
