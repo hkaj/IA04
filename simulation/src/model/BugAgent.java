@@ -28,6 +28,7 @@ public class BugAgent implements Steppable {
 	@Override
 	public void step(SimState simState) {
 		SimulationAgent simulAgent = (SimulationAgent) simState;
+		if (simulAgent == null) System.out.println("NULLLLLLL");
 		
 		//Perception
 		//The perception actions are performed with call to methods canEat, canCharge and whereToMove
@@ -78,24 +79,26 @@ public class BugAgent implements Steppable {
 		
 		//Find all the food objects seen
 		HashMap<Int2D,Food> foodSeen = new HashMap<Int2D, Food>();
-		for (Object obj : allObjects)
-			if (obj instanceof Food) {
-				Int2D objLocation = simulAgent.getGrid().getObjectLocation(obj); 
-				if (objLocation.x >= m_x - DISTANCE_PERCEPTION || objLocation.x <= m_x - DISTANCE_PERCEPTION)
-					if (objLocation.y >= m_y - DISTANCE_PERCEPTION || objLocation.y <= m_y - DISTANCE_PERCEPTION)
-						foodSeen.put(objLocation,(Food) obj);
-			}
+		if (allObjects != null)	
+			for (Object obj : allObjects)
+				if (obj instanceof Food) {
+					Int2D objLocation = simulAgent.getGrid().getObjectLocation(obj); 
+					if (objLocation.x >= m_x - DISTANCE_PERCEPTION || objLocation.x <= m_x - DISTANCE_PERCEPTION)
+						if (objLocation.y >= m_y - DISTANCE_PERCEPTION || objLocation.y <= m_y - DISTANCE_PERCEPTION)
+							foodSeen.put(objLocation,(Food) obj);
+				}
 		
 		//Strategy of choice
 		for (Int2D loc : foodSeen.keySet()){
 			Food currentFood = foodSeen.get(loc);
 			boolean hasBug = false;
-			for (Object obj : simulAgent.getGrid().getObjectsAtLocation(loc)) {
-				if (obj instanceof BugAgent){
-					hasBug = true;
-					break;
+			if (simulAgent.getGrid().numObjectsAtLocation(loc) > 0)
+				for (Object obj : simulAgent.getGrid().getObjectsAtLocation(loc)) {
+					if (obj instanceof BugAgent){
+						hasBug = true;
+						break;
+					}
 				}
-			}
 			
 			if (hasBug) continue;
 			
@@ -131,12 +134,13 @@ public class BugAgent implements Steppable {
 								Int2D currentLocation = new Int2D(i,j);
 								if(Constants.getInstance().distance(currentLocation, bugLocation) <= DISTANCE_DEPLACEMENT){
 									location = currentLocation; 
-									for (Object obj : simulAgent.getGrid().getObjectsAtLocation(foodPointMostClose)){
-										if (obj instanceof BugAgent){
-											location = null;
-											break;
+									if (simulAgent.getGrid().numObjectsAtLocation(foodPointMostClose) > 0)
+										for (Object obj : simulAgent.getGrid().getObjectsAtLocation(foodPointMostClose)){
+											if (obj instanceof BugAgent){
+												location = null;
+												break;
+											}
 										}
-									}
 								}
 							}
 									
@@ -160,12 +164,13 @@ public class BugAgent implements Steppable {
 			for (int j = m_y - 1; j <= m_y + 1; ++j){
 				if(i >= 0 && j >= 0 && i < Constants.getInstance().NB_LINE_AND_COLUMNS() && j < Constants.getInstance().NB_LINE_AND_COLUMNS())
 					if(i != m_x || j != m_y)
-						for (Object obj : simulAgent.getGrid().getObjectsAtLocation(i,j))
-							if (obj instanceof Food) {
-								Food food = (Food) obj;
-								if (choice == null || food.getNumberOfSupplies() > choice.getNumberOfSupplies())
-									choice = food;
-							}
+						if (simulAgent.getGrid().numObjectsAtLocation(i,j) > 0)
+							for (Object obj : simulAgent.getGrid().getObjectsAtLocation(i,j))
+								if (obj instanceof Food) {
+									Food food = (Food) obj;
+									if (choice == null || food.getNumberOfSupplies() > choice.getNumberOfSupplies())
+										choice = food;
+								}
 			}
 		
 		return choice;
@@ -183,9 +188,10 @@ public class BugAgent implements Steppable {
 			for (int j = m_y - 1; j <= m_y + 1; ++j){
 				if(i >= 0 && j >= 0 && i < Constants.getInstance().NB_LINE_AND_COLUMNS() && j < Constants.getInstance().NB_LINE_AND_COLUMNS())
 					if(i != m_x || j != m_y)
-						for (Object obj : simulAgent.getGrid().getObjectsAtLocation(i,j))
-							if (obj instanceof Food)
-								return true;
+						if (simulAgent.getGrid().numObjectsAtLocation(i,j) > 0)
+							for (Object obj : simulAgent.getGrid().getObjectsAtLocation(i,j))
+								if (obj instanceof Food)
+									return true;
 			}
 		return false;
 	}
@@ -193,9 +199,10 @@ public class BugAgent implements Steppable {
 	
 	private boolean canCharge(SimulationAgent simulAgent){
 		if (CHARGE < CHARGE_MAX)
-			for(Object obj : simulAgent.getGrid().getObjectsAtLocation(m_x,m_y))
-				if (obj instanceof Food)
-					return true;
+			if (simulAgent.getGrid().numObjectsAtLocation(m_x, m_y) > 0)
+				for(Object obj : simulAgent.getGrid().getObjectsAtLocation(m_x,m_y))
+					if (obj instanceof Food)
+						return true;
 		return false;
 	}
 	

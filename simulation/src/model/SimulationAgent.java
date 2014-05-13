@@ -91,9 +91,10 @@ public class SimulationAgent extends SimState {
 	public void bugChargeFood(BugAgent bugAgent) throws Exception {
 		//Find the food object
 		Food food = null;
-		for (Object obj : m_grid.getObjectsAtLocation(bugAgent.x(), bugAgent.y()))
-				if (obj instanceof Food)
-					food = (Food) obj;
+		if (m_grid.numObjectsAtLocation(bugAgent.x(), bugAgent.y()) > 0)
+			for (Object obj : m_grid.getObjectsAtLocation(bugAgent.x(), bugAgent.y()))
+					if (obj instanceof Food)
+						food = (Food) obj;
 		
 		//Bug charge
 		bugAgent.increaseCharge();
@@ -108,9 +109,10 @@ public class SimulationAgent extends SimState {
 	
 	public void bugMoveToNewLocation(BugAgent bugAgent, Int2D newLocation) throws Exception {
 		//Verify if the new location is available first
-		for (Object obj : m_grid.getObjectsAtLocation(newLocation))
-				if (obj instanceof BugAgent)
-					throw new Exception();
+		if (m_grid.numObjectsAtLocation(newLocation) > 0)
+			for (Object obj : m_grid.getObjectsAtLocation(newLocation))
+					if (obj instanceof BugAgent)
+						throw new Exception();
 		
 		//Move the bug
 		m_grid.remove(bugAgent);
