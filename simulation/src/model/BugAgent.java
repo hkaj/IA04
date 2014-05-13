@@ -58,10 +58,12 @@ public class BugAgent implements Steppable {
 		} else {
 			//MOVE
 			Int2D newLocation = whereToMove(simulAgent);
-			try {
-				simulAgent.bugMoveToNewLocation(this,newLocation);
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (newLocation != null){
+				try {
+					simulAgent.bugMoveToNewLocation(this,newLocation);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -117,22 +119,30 @@ public class BugAgent implements Steppable {
 						foodPointMostClose = loc;
 				}
 				
-				for (int i = m_x - 1; i <= m_x + 1; ++i)
-					for (int j = m_y - 1; j <= m_y + 1; ++j){
-						if(i >= 0 && j >= 0 && i < Constants.getInstance().NB_LINE_AND_COLUMNS() && j < Constants.getInstance().NB_LINE_AND_COLUMNS()){
-							Int2D currentLocation = new Int2D(i,j);
-							if(Constants.getInstance().distance(location, bugLocation) <= DISTANCE_DEPLACEMENT){
-								location = currentLocation; 
-								for (Object obj : simulAgent.getGrid().getObjectsAtLocation(foodPointMostClose)){
-									if (obj instanceof BugAgent){
-										location = null;
-										break;
+				if (foodPointMostClose == null){
+					int randomX = (int)(Math.random() * (m_x + DISTANCE_DEPLACEMENT));
+					int randomY = (int)(Math.random() * (m_y + DISTANCE_DEPLACEMENT));
+					location = new Int2D(randomX, randomY);
+				} else {
+				
+					for (int i = m_x - 1; i <= m_x + 1 && location == null; ++i){
+						for (int j = m_y - 1; j <= m_y + 1 && location == null; ++j){
+							if(i >= 0 && j >= 0 && i < Constants.getInstance().NB_LINE_AND_COLUMNS() && j < Constants.getInstance().NB_LINE_AND_COLUMNS()){
+								Int2D currentLocation = new Int2D(i,j);
+								if(Constants.getInstance().distance(currentLocation, bugLocation) <= DISTANCE_DEPLACEMENT){
+									location = currentLocation; 
+									for (Object obj : simulAgent.getGrid().getObjectsAtLocation(foodPointMostClose)){
+										if (obj instanceof BugAgent){
+											location = null;
+											break;
+										}
 									}
 								}
 							}
+									
 						}
-								
 					}
+				}
 				
 			}
 		}
@@ -142,6 +152,8 @@ public class BugAgent implements Steppable {
 
 	private Food getMostSuitableFood(SimulationAgent simulAgent) {
 		//On choisit le point de nourriture le plus rempli
+		
+		if (simulAgent.getGrid() == null) System.out.println("simul null dans suitable");
 		
 		Food choice = null;
 		for (int i = m_x - 1; i <= m_x + 1; ++i)
@@ -164,6 +176,8 @@ public class BugAgent implements Steppable {
 		if (CHARGE > 0){
 			return true;			
 		}
+		
+		if (simulAgent == null) System.out.println("simul null");
 		
 		for (int i = m_x - 1; i <= m_x + 1; ++i)
 			for (int j = m_y - 1; j <= m_y + 1; ++j){

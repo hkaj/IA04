@@ -51,7 +51,7 @@ public class SimulationAgent extends SimState {
 	}
 	
 
-	private Int2D getFreeLocation(Object objToAdd) {
+	public Int2D getFreeLocation(Object objToAdd) {
 		//Trouve une case libre adjacente où se déplacer
 		//Une case ne contenant pas d'autre object du même type que objToAdd est éligible
 		Int2D location = null;
