@@ -68,15 +68,15 @@ public class Constants {
 	
 	
 	//Members
-	private int NB_LINE_AND_COLUMNS = 10;
-	private int NB_BUGS = 4;
-	private int NB_FOOD_CELL = 12;
+	private int NB_LINE_AND_COLUMNS = 30;
+	private int NB_BUGS = 10;
+	private int NB_FOOD_CELL = 15;
 	
 	//Properties for bugs
 	private int NB_MAX_DEPLACEMENT = 5;
 	private int NB_MAX_CHARGE = 5;
 	private int NB_CAPACITIES = 10;
-	private int NB_MAX_VIE = 10;
+	private int NB_MAX_VIE = 15;
 
 	//Properties for food
 	private int NB_MAX_SUPPLIES = 5;
