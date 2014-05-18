@@ -60,6 +60,12 @@ public class Constants {
 	
 	
 	//Tools
+	
+	/**
+	 * @param a
+	 * @param b
+	 * @return The distance between the two cases a and b
+	 */
 	public int distance(Int2D a, Int2D b){
 		int numberOfXCase = Math.abs(a.x - b.x);
 		int numberOfYCase = Math.abs(a.y - b.y);

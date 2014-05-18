@@ -11,11 +11,15 @@ public class SimulationAgent extends SimState {
 	public SimulationAgent(long seed) {
 		super(seed);
 		
+		//Construction of the grid and get the number of bugs
 		m_grid = new SparseGrid2D(Constants.getInstance().NB_LINE_AND_COLUMNS(), Constants.getInstance().NB_LINE_AND_COLUMNS());
+		m_nbOfBugs = Constants.getInstance().NB_BUGS();
 	}
 
 	public void start (){
 		super.start();
+		
+		//Clear the grid before adding the bugs and food
 		m_grid.clear();
 		
 		//Remplissage de la grille avec les insectes et la nourriture
@@ -23,6 +27,12 @@ public class SimulationAgent extends SimState {
 		addFoods();
 	}
 
+	
+	
+	/**
+	 * Generate the numbers of Bugs required on the map
+	 * The bugs are randomly placed set
+	 */
 	private void addBugAgents() {
 		for(int i = 0; i < Constants.getInstance().NB_BUGS(); i++) {
 			BugAgent bug = new BugAgent();
@@ -51,10 +61,15 @@ public class SimulationAgent extends SimState {
 	}
 	
 
+	/**
+	 * @param objToAdd
+	 * @return
+	 * Trouve une case libre adjacente où se déplacer
+	 * Une case ne contenant pas d'autre object du même type que objToAdd est éligible
+	 */
 	public Int2D getFreeLocation(Object objToAdd) {
-		//Trouve une case libre adjacente où se déplacer
-		//Une case ne contenant pas d'autre object du même type que objToAdd est éligible
 		Int2D location = null;
+		
 		do{
 			location = new Int2D(random.nextInt(m_grid.getWidth()), random.nextInt(m_grid.getHeight()));
 			Bag objBag = m_grid.getObjectsAtLocation(location.x,location.y);
@@ -67,6 +82,7 @@ public class SimulationAgent extends SimState {
 				}
 			}
 		} while (location == null);
+		
 		return location;
 	}
 	
@@ -108,11 +124,14 @@ public class SimulationAgent extends SimState {
 	}	
 	
 	public void bugMoveToNewLocation(BugAgent bugAgent, Int2D newLocation) throws Exception {
-		//Verify if the new location is available first
+		//Verify if the new location is available first 
 		if (m_grid.numObjectsAtLocation(newLocation) > 0)
 			for (Object obj : m_grid.getObjectsAtLocation(newLocation))
-					if (obj instanceof BugAgent)
+					if (obj instanceof BugAgent){
+						System.out.println(newLocation);
+						System.out.println(bugAgent.getLocation());
 						throw new Exception();
+					}				
 		
 		//Move the bug
 		m_grid.remove(bugAgent);
@@ -123,14 +142,24 @@ public class SimulationAgent extends SimState {
 	public void removeBugAgent(BugAgent bug){
 		m_grid.remove(bug);
 		bug.getStoppable().stop();
+		m_nbOfBugs--;
 	}
 	
 	
 	//Getters & Setters
 	public final SparseGrid2D getGrid() { return m_grid;}
-	public final void setGrid(SparseGrid2D m_grid) { this.m_grid = m_grid; }
+	
+	public int getNumBugs() {
+		return m_nbOfBugs;
+	}
+	
+	
+	public void setNumBugs(int nb) {
+		m_nbOfBugs = nb;
+	}
 
 	//Members
 	private SparseGrid2D m_grid;
+	private int m_nbOfBugs;
 
 }
