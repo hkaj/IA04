@@ -56,7 +56,7 @@ public class SimulationAgent extends SimState {
 	private void addFood() {
 		Food food = new Food(true);
 		Int2D location = getFreeLocation(food);
-		m_grid.setObjectLocation(food, location);
+		m_grid.setObjectLocation(food, location.x, location.y);
 		food.setLocation(location);		
 	}
 	
@@ -90,7 +90,7 @@ public class SimulationAgent extends SimState {
 	
 	//Bug actions
 	public void bugEatAtFoodPoint(BugAgent bugAgent, Food food) throws Exception {
-		if (food.getNumberOfSupplies() < 0)
+		if (food.getNumberOfSupplies() <= 0)
 			throw new Exception();
 		
 		//Bug eats
@@ -109,7 +109,7 @@ public class SimulationAgent extends SimState {
 		Food food = null;
 		if (m_grid.numObjectsAtLocation(bugAgent.x(), bugAgent.y()) > 0)
 			for (Object obj : m_grid.getObjectsAtLocation(bugAgent.x(), bugAgent.y()))
-					if (obj instanceof Food)
+					if (obj.getClass().isAssignableFrom(Food.class))
 						food = (Food) obj;
 		
 		//Bug charge
@@ -127,7 +127,7 @@ public class SimulationAgent extends SimState {
 		//Verify if the new location is available first 
 		if (m_grid.numObjectsAtLocation(newLocation) > 0)
 			for (Object obj : m_grid.getObjectsAtLocation(newLocation))
-					if (obj instanceof BugAgent){
+					if (obj.getClass().isAssignableFrom(BugAgent.class)){
 						System.out.println(newLocation);
 						System.out.println(bugAgent.getLocation());
 						throw new Exception();
@@ -136,6 +136,8 @@ public class SimulationAgent extends SimState {
 		//Move the bug
 		m_grid.remove(bugAgent);
 		m_grid.setObjectLocation(bugAgent, newLocation);
+		bugAgent.setX(newLocation.x);
+		bugAgent.setY(newLocation.y);
 		bugAgent.decreaseVie();
 	}
 	
