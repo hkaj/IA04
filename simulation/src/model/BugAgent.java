@@ -6,8 +6,10 @@ import java.util.HashMap;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.engine.Stoppable;
+import sim.field.grid.Grid2D;
 import sim.util.Bag;
 import sim.util.Int2D;
+import sim.util.IntBag;
 
 public class BugAgent implements Steppable {
 
@@ -26,6 +28,13 @@ public class BugAgent implements Steppable {
 		
 		VIE = VIE_MAX;
 		CHARGE = 0;
+		
+//		System.out.println("!!! New bug !!!");
+//		System.out.println("Deplacement : " + DISTANCE_DEPLACEMENT);
+//		System.out.println("Charge : " + CHARGE_MAX);
+//		System.out.println("Perception : " + DISTANCE_PERCEPTION);
+//		System.out.println("Vie max : " + VIE_MAX);
+//		System.out.println();
 	}
 	
 	@Override
@@ -35,10 +44,13 @@ public class BugAgent implements Steppable {
 		//Perception
 		//The perception actions are performed with call to methods canEat, canCharge and whereToMove
 		
+		//System.out.println("VIE : " + VIE + " VIE MAX " + VIE_MAX);
 		
 		//Choose whether eat or move or charge
-		if (VIE < VIE_MAX && canEat(simulAgent)){
+		if (canEat(simulAgent)){
 			//EAT
+			//System.out.println("BUG EAT");
+			
 			Food food = getMostSuitableFood(simulAgent);	//Looking for a food point
 			if (food != null) {
 				
@@ -52,11 +64,14 @@ public class BugAgent implements Steppable {
 			} else {
 				
 				//EAT CHARGE
-				eatCharge();
+				if (CHARGE > 0)
+					eatCharge();
 			}
 			
 		} else if (CHARGE < CHARGE_MAX && canCharge(simulAgent)) {
 			//CHARGE
+			//System.out.println("BUG CHARGE");
+			
 			try {
 				simulAgent.bugChargeFood(this);
 			} catch (Exception e) {
@@ -65,6 +80,8 @@ public class BugAgent implements Steppable {
 			
 		} else {
 			//MOVE
+			//System.out.println("BUG MOVES");
+			
 			Int2D newLocation = findWhereToMove(simulAgent);	//Looking for a place to move to
 			if (newLocation != null){
 				try {
@@ -90,21 +107,20 @@ public class BugAgent implements Steppable {
 	private Int2D findWhereToMove(SimulationAgent simulAgent) {
 		Int2D location = null;
 		Int2D bugLocation = getLocation();
-		Bag allObjects = simulAgent.getGrid().getAllObjects();
+		//Bag allObjects = simulAgent.getGrid().getAllObjects();
 		
 		//Find all the food objects seen
 		HashMap<Int2D,Food> foodSeen = new HashMap<Int2D, Food>();
 		
-		if (allObjects != null)	
-			for (Object obj : allObjects)
-				if (obj instanceof Food) {
-					Int2D objLocation = simulAgent.getGrid().getObjectLocation(obj); 
-					if (objLocation.x >= m_x - DISTANCE_PERCEPTION || objLocation.x <= m_x - DISTANCE_PERCEPTION)
-						if (objLocation.y >= m_y - DISTANCE_PERCEPTION || objLocation.y <= m_y - DISTANCE_PERCEPTION)
-							foodSeen.put(objLocation,(Food) obj);
-				}
-		
-		
+		IntBag xbag = new IntBag(), ybag = new IntBag();
+		Bag objects = new Bag();
+		simulAgent.getGrid().getMooreNeighborsAndLocations(m_x, m_y, DISTANCE_PERCEPTION, Grid2D.TOROIDAL, objects, xbag, ybag);
+		for (Object obj : objects){
+			if (obj.getClass().isAssignableFrom(Food.class)) {
+				Int2D objLocation = simulAgent.getGrid().getObjectLocation(obj); 
+				foodSeen.put(objLocation,(Food) obj);
+			}
+		}
 		
 		//Strategy of choice
 		for (Int2D loc : foodSeen.keySet()){
@@ -112,7 +128,7 @@ public class BugAgent implements Steppable {
 			
 			if (simulAgent.getGrid().numObjectsAtLocation(loc) > 0)
 				for (Object obj : simulAgent.getGrid().getObjectsAtLocation(loc)) {
-					if (obj instanceof BugAgent){
+					if (obj.getClass().isAssignableFrom(BugAgent.class)){
 						hasBug = true;
 						break;
 					}
@@ -131,11 +147,7 @@ public class BugAgent implements Steppable {
 		if (location == null){
 			if (foodSeen.isEmpty())
 			{
-				//If we don't see food, we need to find a random position where to move to
-				int randomX = (int)(Math.random() * (m_x + DISTANCE_DEPLACEMENT));
-				int randomY = (int)(Math.random() * (m_y + DISTANCE_DEPLACEMENT));
-				location = new Int2D(randomX, randomY);
-				
+				location = randomPosition();
 			} else {
 				
 				//The food points seen are not reachable but we can find a case adjacent to one
@@ -158,38 +170,55 @@ public class BugAgent implements Steppable {
 				
 				
 				//Find a reachable case
-				for (Int2D foodPointLocation : orderedFoodList){
-					int foodPointLocationX = foodPointLocation.x, foodPointLocationY = foodPointLocation.y;
+				for (Int2D foodPointLocation : orderedFoodList){					
 					
-					for (int i = foodPointLocationX - 1; i <= foodPointLocationX + 1 && location == null; ++i){
-						for (int j = foodPointLocationY - 1; j <= foodPointLocationY + 1 && location == null; ++j){
-							Int2D currentLocation = new Int2D(i,j);
+					simulAgent.getGrid().getMooreLocations(foodPointLocation.x, foodPointLocation.y, 1, Grid2D.TOROIDAL, false, xbag, ybag);
+					for (int x : xbag.objs){
+						for (int y : xbag.objs){
+							Int2D currentLocation = new Int2D(x,y);
 							if(Constants.getInstance().distance(currentLocation, bugLocation) <= DISTANCE_DEPLACEMENT){
 								location = currentLocation;
 								
 								//We need to check if a bug is not already on the case
 								if (simulAgent.getGrid().numObjectsAtLocation(currentLocation) > 0){
 									for (Object obj : simulAgent.getGrid().getObjectsAtLocation(currentLocation)){
-										if (obj instanceof BugAgent){
+										if (obj.getClass().isAssignableFrom(BugAgent.class)){
 											location = null;
 											break;
 										}
 									}
 								}
 							}
-						}	
+						}
 					}
+					
+					
+					
+					
 				}
 				
 				//If we did not find a suitable location, we choose a random location
 				if (location == null) {
-					int randomX = (int)(Math.random() * (m_x + DISTANCE_DEPLACEMENT));
-					int randomY = (int)(Math.random() * (m_y + DISTANCE_DEPLACEMENT));
-					location = new Int2D(randomX, randomY);
+					location = randomPosition();
 				}	
 			}
 		}
 		
+		return location;
+	}
+
+	
+	
+	private Int2D randomPosition() {
+		Int2D location;
+		int newX, newY;
+		do{
+			int randomDeplacementX = (int)(Math.random() * (2 * DISTANCE_DEPLACEMENT)) - DISTANCE_DEPLACEMENT;
+			int randomDeplacementY = (int)(Math.random() * (2 * DISTANCE_DEPLACEMENT)) - DISTANCE_DEPLACEMENT;
+			newX = (m_x + randomDeplacementX) % (Constants.getInstance().NB_LINE_AND_COLUMNS() - 1);
+			newY = (m_y + randomDeplacementY) % (Constants.getInstance().NB_LINE_AND_COLUMNS() - 1);
+		}while (newX == m_x || newY == m_y);
+		location = new Int2D(newX >= 0 ? newX : newX + Constants.getInstance().NB_LINE_AND_COLUMNS(), newY >= 0 ? newY : newY + Constants.getInstance().NB_LINE_AND_COLUMNS());
 		return location;
 	}
 
@@ -204,18 +233,15 @@ public class BugAgent implements Steppable {
 		//On choisit le point de nourriture le plus rempli
 		
 		Food choice = null;
-		for (int i = m_x - 1; i <= m_x + 1; ++i)
-			for (int j = m_y - 1; j <= m_y + 1; ++j){
-				if(i >= 0 && j >= 0 && i < Constants.getInstance().NB_LINE_AND_COLUMNS() && j < Constants.getInstance().NB_LINE_AND_COLUMNS())
-					if(i != m_x || j != m_y)
-						if (simulAgent.getGrid().numObjectsAtLocation(i,j) > 0)
-							for (Object obj : simulAgent.getGrid().getObjectsAtLocation(i,j))
-								if (obj instanceof Food) {	//if we find food
-									Food food = (Food) obj;
-									if (choice == null || food.getNumberOfSupplies() > choice.getNumberOfSupplies()) //and the supplies in the point are more numerous, this is our target
-										choice = food;
-								}
+		
+		IntBag xbag = new IntBag(), ybag = new IntBag();
+		Bag objects = new Bag();
+		simulAgent.getGrid().getMooreNeighborsAndLocations(m_x, m_y, 1, Grid2D.TOROIDAL, objects, xbag, ybag);
+		for (Object obj : objects){
+			if (obj.getClass().isAssignableFrom(model.Food.class) && (choice == null || ((Food) obj).getNumberOfSupplies() > choice.getNumberOfSupplies())){
+				choice = (Food) obj;
 			}
+		}
 		
 		return choice;
 	}
@@ -240,16 +266,16 @@ public class BugAgent implements Steppable {
 			return true;			
 		}
 		
-		//If there is food on an adjacent case, the bug can eat
-		for (int i = m_x - 1; i <= m_x + 1; ++i)
-			for (int j = m_y - 1; j <= m_y + 1; ++j){
-				if(i >= 0 && j >= 0 && i < Constants.getInstance().NB_LINE_AND_COLUMNS() && j < Constants.getInstance().NB_LINE_AND_COLUMNS())
-					if(i != m_x || j != m_y)
-						if (simulAgent.getGrid().numObjectsAtLocation(i,j) > 0)
-							for (Object obj : simulAgent.getGrid().getObjectsAtLocation(i,j))
-								if (obj instanceof Food)
-									return true;
+		//If there is food on an adjacent case, the bug can eat		
+		IntBag xbag = new IntBag(), ybag = new IntBag();
+		Bag objects = new Bag();
+		simulAgent.getGrid().getMooreNeighborsAndLocations(m_x, m_y, 1, Grid2D.TOROIDAL, objects, xbag, ybag);
+		for (Object obj : objects){
+			if (obj.getClass().isAssignableFrom(model.Food.class)){
+				return true;
 			}
+		}
+		
 		return false;
 	}
 	
@@ -263,7 +289,7 @@ public class BugAgent implements Steppable {
 		if (CHARGE < CHARGE_MAX)
 			if (simulAgent.getGrid().numObjectsAtLocation(m_x, m_y) > 0)
 				for(Object obj : simulAgent.getGrid().getObjectsAtLocation(m_x,m_y))
-					if (obj instanceof Food)
+					if (obj.getClass().isAssignableFrom(Food.class))
 						return true;
 		return false;
 	}

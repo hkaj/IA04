@@ -69,6 +69,13 @@ public class Constants {
 	public int distance(Int2D a, Int2D b){
 		int numberOfXCase = Math.abs(a.x - b.x);
 		int numberOfYCase = Math.abs(a.y - b.y);
+		
+		if (numberOfXCase > Constants.getInstance().NB_LINE_AND_COLUMNS / 2)
+			numberOfXCase = Constants.getInstance().NB_LINE_AND_COLUMNS - numberOfXCase;
+		
+		if (numberOfYCase > Constants.getInstance().NB_LINE_AND_COLUMNS / 2)
+			numberOfYCase = Constants.getInstance().NB_LINE_AND_COLUMNS - numberOfYCase;
+		
 		return Math.max( numberOfXCase , numberOfYCase );
 	}
 	
