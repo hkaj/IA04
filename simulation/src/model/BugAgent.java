@@ -213,8 +213,10 @@ public class BugAgent implements Steppable {
 		Int2D location;
 		int newX, newY;
 		do{
-			int randomDeplacementX = (int)(Math.random() * (2 * DISTANCE_DEPLACEMENT)) - DISTANCE_DEPLACEMENT;
-			int randomDeplacementY = (int)(Math.random() * (2 * DISTANCE_DEPLACEMENT)) - DISTANCE_DEPLACEMENT;
+			//int randomDeplacementX = (int)(Math.random() * (2 * DISTANCE_DEPLACEMENT)) - DISTANCE_DEPLACEMENT;
+			//int randomDeplacementY = (int)(Math.random() * (2 * DISTANCE_DEPLACEMENT)) - DISTANCE_DEPLACEMENT;
+			int randomDeplacementX = (int)(Math.random() * (DISTANCE_DEPLACEMENT + 1));
+			int randomDeplacementY = (int)(Math.random() * (DISTANCE_DEPLACEMENT + 1));
 			newX = (m_x + randomDeplacementX) % (Constants.getInstance().NB_LINE_AND_COLUMNS() - 1);
 			newY = (m_y + randomDeplacementY) % (Constants.getInstance().NB_LINE_AND_COLUMNS() - 1);
 		}while (newX == m_x || newY == m_y);
@@ -257,7 +259,7 @@ public class BugAgent implements Steppable {
 	 */
 	private boolean canEat(SimulationAgent simulAgent){
 		//If his life is full, the bug does not need to eat
-		if (VIE == VIE_MAX){
+		if (VIE > VIE_MAX - Constants.getInstance().NB_ENERGY()){
 			return false;
 		}
 		
